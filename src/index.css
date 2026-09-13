@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* A4 Print Media Styles */
+@page {
+  size: A4 portrait;
+  margin: 10mm 12mm 12mm 12mm;
+}
+
+@media print {
+  html,
+  body {
+    width: 210mm !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Force hide extraneous UI in print mode */
+  header,
+  footer,
+  #floating-whatsapp-btn,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Page break controls */
+  .page-break-inside-avoid {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Barcode Print Isolation Mode */
+  body.printing-barcode-mode * {
+    visibility: hidden !important;
+  }
+
+  body.printing-barcode-mode #printable-barcode-container,
+  body.printing-barcode-mode #printable-barcode-container * {
+    visibility: visible !important;
+  }
+
+  body.printing-barcode-mode #printable-barcode-container {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 6mm !important;
+    display: block !important;
+    background: #ffffff !important;
+    z-index: 999999 !important;
+  }
+}
+
