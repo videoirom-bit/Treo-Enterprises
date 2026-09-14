@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { ABCStoreLogo } from '../components/ABCStoreLogo';
 import { formatINR } from '../utils/gstUtils';
 import { uploadInvoiceToDrive } from '../services/driveService';
 import { googleSignIn, getAccessToken } from '../services/firebaseAuth';
@@ -496,13 +497,14 @@ export const InvoiceView: React.FC = () => {
         {/* Header with Shop Details */}
         <div className="border-b-2 border-slate-800 pb-4 flex justify-between items-start flex-wrap gap-4 avoid-page-break">
           <div>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-teal-800 text-white flex items-center justify-center font-black text-xl">
-                {shopSettings.shopLogo ? (
-                  <img src={shopSettings.shopLogo} alt={shopSettings.shopName} className="w-full h-full object-cover rounded-xl" />
-                ) : (
-                  'ABC'
-                )}
+            <div className="flex items-center gap-4">
+              <div className="h-16 w-auto shrink-0 flex items-center">
+                <img
+                  src="/treo-logo.svg"
+                  alt="Treo Enterprises"
+                  className="h-14 sm:h-16 w-auto object-contain"
+                  referrerPolicy="no-referrer"
+                />
               </div>
               <div>
                 <h1 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900">

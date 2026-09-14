@@ -119,17 +119,9 @@ export const Header: React.FC = () => {
               onClick={() => handleNavClick('admin')}
               className="flex items-center gap-1.5 text-teal-300 hover:text-white transition font-medium px-2 py-0.5 rounded hover:bg-slate-800 text-[11px] whitespace-nowrap"
             >
-              <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
-              <span>
-                {isAdminLoggedIn
-                  ? currentAdminUser
-                    ? `Admin: ${currentAdminUser.name.split(' ')[0]}`
-                    : 'Admin Panel'
-                  : 'Shop Owner'}
-              </span>
-              {isAdminLoggedIn && (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-              )}
+              <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-teal-400" />
+              <span>Admin Panel</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             </button>
           </div>
         </div>
@@ -399,23 +391,19 @@ export const Header: React.FC = () => {
             <span>My Account & Orders</span>
           </button>
 
-          {/* Direct link to Admin / Staff Portal */}
+          {/* Direct link to Admin Portal */}
           <button
             id="nav-link-admin-portal"
             onClick={() => handleNavClick('admin')}
             className={`text-xs px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
               activeView === 'admin'
                 ? 'bg-slate-900 text-white dark:bg-teal-600 dark:text-white font-bold shadow-xs'
-                : isAdminLoggedIn
-                ? 'text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950/40 font-semibold'
-                : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 font-medium'
+                : 'text-teal-700 dark:text-teal-300 hover:bg-teal-50 dark:hover:bg-teal-950/40 font-semibold'
             }`}
           >
-            <ShieldCheck className={`w-3.5 h-3.5 shrink-0 ${isAdminLoggedIn ? 'text-teal-500 dark:text-teal-300' : 'text-slate-400'}`} />
-            <span>{isAdminLoggedIn ? (currentAdminUser ? `Admin: ${currentAdminUser.name.split(' ')[0]}` : 'Admin Panel') : 'Staff Login'}</span>
-            {isAdminLoggedIn && (
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            )}
+            <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-teal-500 dark:text-teal-300" />
+            <span>Admin Dashboard</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
           </button>
         </nav>
       </div>
@@ -564,28 +552,22 @@ export const Header: React.FC = () => {
               className={`text-left px-3.5 py-2.5 rounded-xl col-span-2 flex items-center justify-between transition ${
                 activeView === 'admin'
                   ? 'bg-slate-900 text-white dark:bg-slate-800 border-2 border-teal-400 shadow-md'
-                  : isAdminLoggedIn
-                  ? 'bg-slate-900 text-white dark:bg-slate-800 border border-teal-500/40 shadow-xs'
-                  : 'bg-slate-800 text-white hover:bg-slate-700'
+                  : 'bg-slate-900 text-white dark:bg-slate-800 border border-teal-500/40 shadow-xs'
               }`}
             >
               <div className="flex items-center gap-2">
-                <ShieldCheck className={`w-4 h-4 shrink-0 ${isAdminLoggedIn ? 'text-teal-400' : 'text-amber-400'}`} />
+                <ShieldCheck className="w-4 h-4 shrink-0 text-teal-400" />
                 <div>
                   <div className="font-semibold text-xs leading-tight">
-                    {isAdminLoggedIn
-                      ? `Admin: ${currentAdminUser?.name || 'Store Owner'}`
-                      : 'Shop Owner / Admin Dashboard'}
+                    Admin Dashboard
                   </div>
                   <div className="text-[10px] text-slate-400 leading-tight">
-                    {isAdminLoggedIn ? 'Inventory, Orders, POS, GST' : 'Enter 4-digit PIN or password'}
+                    Inventory, Orders, POS, GST & Reports
                   </div>
                 </div>
               </div>
-              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
-                isAdminLoggedIn ? 'bg-teal-500/20 text-teal-300 border border-teal-400/30' : 'bg-slate-700 text-slate-300'
-              }`}>
-                {isAdminLoggedIn ? 'Unlocked' : 'PIN Login'}
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 bg-teal-500/20 text-teal-300 border border-teal-400/30">
+                Direct Access
               </span>
             </button>
           </div>

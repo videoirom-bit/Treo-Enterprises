@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
+import { ABCStoreLogo } from './ABCStoreLogo';
 import {
   Phone,
   Mail,
@@ -27,13 +28,8 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand and Description */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-teal-600 text-white flex items-center justify-center font-black text-lg">
-                ABC
-              </div>
-              <span className="font-extrabold text-lg text-white tracking-tight">
-                {shopSettings.shopName}
-              </span>
+            <div className="flex items-center">
+              <ABCStoreLogo size="lg" variant="full" inverted={true} />
             </div>
 
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">

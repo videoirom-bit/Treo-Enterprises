@@ -781,7 +781,7 @@ export async function deleteStaffUserFromSupabase(id: string): Promise<boolean> 
 // 9. SUPABASE AUTH INTEGRATION
 // ---------------------------------------------------------------------------
 export async function supabaseAuthSignIn(identifier: string, secret?: string) {
-  const email = identifier.includes('@') ? identifier.trim().toLowerCase() : `${identifier.trim().replace(/[^a-zA-Z0-9]/g, '')}@abcpapers.com`;
+  const email = identifier.includes('@') ? identifier.trim().toLowerCase() : `${identifier.trim().replace(/[^a-zA-Z0-9]/g, '')}@treoenterprises.com`;
   const password = secret || 'AbcAdmin2026!';
 
   try {
@@ -833,6 +833,17 @@ export async function supabaseAuthUpdatePassword(newPassword: string) {
   try {
     const { data, error } = await supabase.auth.updateUser({
       password: newPassword,
+    });
+    return { data, error };
+  } catch (err: any) {
+    return { data: null, error: err };
+  }
+}
+
+export async function supabaseAuthUpdateEmail(newEmail: string) {
+  try {
+    const { data, error } = await supabase.auth.updateUser({
+      email: newEmail.trim().toLowerCase(),
     });
     return { data, error };
   } catch (err: any) {

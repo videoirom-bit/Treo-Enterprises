@@ -216,11 +216,20 @@ export interface PaymentRecord {
   id: string;
   orderId: string;
   amount: number;
-  method: PaymentMethod;
-  status: PaymentStatus;
+  method?: PaymentMethod | string;
+  status?: PaymentStatus | string;
   transactionReference?: string;
-  timestamp: string;
+  timestamp?: string;
   notes?: string;
+
+  // Supabase / Super Admin extended fields
+  customerId?: string;
+  paymentMethod?: string;
+  paymentStatus?: string;
+  transactionId?: string;
+  paymentDate?: string;
+  createdBy?: string;
+  createdAt?: string;
 }
 
 export interface DeliveryAssignment {
@@ -393,17 +402,4 @@ export interface OrderStatusHistoryEntry {
   timestamp: string;
 }
 
-export interface PaymentRecord {
-  id: string;
-  orderId: string;
-  customerId?: string;
-  amount: number;
-  paymentMethod: string;
-  paymentStatus: string;
-  transactionId?: string;
-  paymentDate: string;
-  notes?: string;
-  createdBy?: string;
-  createdAt: string;
-}
 

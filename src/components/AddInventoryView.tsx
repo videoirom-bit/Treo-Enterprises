@@ -673,7 +673,6 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
             </div>
           </div>
 
-          {/* Quick Super Admin Authentication Elevation */}
           <div className="max-w-md mx-auto space-y-3 pt-2">
             <button
               id="elevate-super-admin-btn"

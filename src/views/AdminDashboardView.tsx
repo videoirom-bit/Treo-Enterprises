@@ -55,6 +55,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  Key,
 } from 'lucide-react';
 import { formatINR } from '../utils/gstUtils';
 import { uploadReportToDrive } from '../services/driveService';
@@ -64,9 +65,9 @@ import { initialShopSettings } from '../data/sampleData';
 import { generateProductsCSV, downloadCSVFile } from '../utils/csvUtils';
 import { LowStockWidget } from '../components/LowStockWidget';
 import { ProductBarcodeModal } from '../components/ProductBarcodeModal';
-import { AdminAuthView } from './AdminAuthView';
 import { StaffManagementTab } from '../components/StaffManagementTab';
 import { AddInventoryView } from '../components/AddInventoryView';
+import { SuperAdminCredentialsModal } from '../components/SuperAdminCredentialsModal';
 
 const INDIAN_STATES_GST = [
   { code: '01', name: 'Jammu and Kashmir' },
@@ -241,6 +242,7 @@ export const AdminDashboardView: React.FC = () => {
   const [productFormError, setProductFormError] = useState<string | null>(null);
   const [isSavingProduct, setIsSavingProduct] = useState(false);
   const [imageUploadMode, setImageUploadMode] = useState<'upload' | 'url'>('upload');
+  const [showSuperAdminCredentialsModal, setShowSuperAdminCredentialsModal] = useState(false);
 
   // Order Management & Real-Time Tracking States
   const [orderSearchQuery, setOrderSearchQuery] = useState('');
@@ -835,11 +837,6 @@ export const AdminDashboardView: React.FC = () => {
     }
   };
 
-  // Auth gate check: if staff/admin is not authenticated, show modern staff login/signup portal
-  if (!isAdminLoggedIn) {
-    return <AdminAuthView />;
-  }
-
   return (
     <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-3 sm:space-y-6 pb-[calc(6rem+env(safe-area-inset-bottom,0px))] sm:pb-16 overflow-x-hidden">
       {/* Top Admin Navigation Header */}
@@ -889,11 +886,11 @@ export const AdminDashboardView: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-3 gap-1.5 sm:gap-2 w-full md:w-auto md:flex md:items-center pt-2 md:pt-0 border-t border-slate-800 md:border-t-0">
+        <div className="flex items-center gap-2 w-full md:w-auto pt-2 md:pt-0 border-t border-slate-800 md:border-t-0">
           {/* Quick view store */}
           <button
             onClick={() => setActiveView('home')}
-            className="min-h-[44px] px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-xs font-semibold text-slate-200 flex items-center justify-center text-center transition cursor-pointer touch-manipulation"
+            className="flex-1 md:flex-initial min-h-[44px] px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-xs font-semibold text-slate-200 flex items-center justify-center text-center transition cursor-pointer touch-manipulation"
           >
             <span>Storefront</span>
           </button>
@@ -902,24 +899,10 @@ export const AdminDashboardView: React.FC = () => {
           <button
             onClick={resetDemoData}
             title="Reset to fresh demo dataset"
-            className="min-h-[44px] px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-xs font-semibold text-amber-400 flex items-center justify-center gap-1.5 transition cursor-pointer touch-manipulation"
+            className="flex-1 md:flex-initial min-h-[44px] px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-xs font-semibold text-amber-400 flex items-center justify-center gap-1.5 transition cursor-pointer touch-manipulation"
           >
             <RotateCcw className="w-3.5 h-3.5 shrink-0" />
             <span className="truncate">Reset Demo</span>
-          </button>
-
-          {/* Logout */}
-          <button
-            id="admin-logout-btn"
-            onClick={() => {
-              logoutAdmin();
-              showToast('Logged out from Admin panel.');
-            }}
-            className="min-h-[44px] px-3 py-2 rounded-xl bg-red-600/80 hover:bg-red-600 active:bg-red-700 text-xs font-semibold text-white flex items-center justify-center gap-1.5 transition cursor-pointer touch-manipulation shadow-xs"
-            title="Log out and lock dashboard"
-          >
-            <LogOut className="w-3.5 h-3.5 shrink-0" />
-            <span className="truncate">Lock / Logout</span>
           </button>
         </div>
       </div>
@@ -4601,6 +4584,13 @@ export const AdminDashboardView: React.FC = () => {
 
       {/* TAB 10: STAFF & RBAC TEAM MANAGEMENT */}
       {activeTab === 'staff' && <StaffManagementTab />}
+
+      {/* Super Admin Credentials & Password Change Modal */}
+      {showSuperAdminCredentialsModal && (
+        <SuperAdminCredentialsModal
+          onClose={() => setShowSuperAdminCredentialsModal(false)}
+        />
+      )}
     </div>
   );
 };

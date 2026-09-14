@@ -1,0 +1,186 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 460" width="100%" height="100%">
+  <defs>
+    <filter id="treoShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#081d58" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <!-- ==================== MASCOT: DEER / FAWN ==================== -->
+  <g id="treo-deer-mascot">
+    <!-- Ground Shadow under feet -->
+    <ellipse cx="270" cy="254" rx="36" ry="6" fill="#081d58" opacity="0.8" />
+
+    <!-- Antlers -->
+    <!-- Left Antler -->
+    <path d="M246 95 C240 82 222 62 212 48 C218 54 224 64 226 70 C220 58 210 42 203 30 C209 38 215 50 217 58 C211 46 207 34 205 22 C213 34 224 54 230 70 C236 56 242 40 244 24 C249 40 250 60 248 82 Z" 
+          fill="#fef08a" stroke="#081d58" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+    <!-- Right Antler -->
+    <path d="M294 95 C300 82 318 62 328 48 C322 54 316 64 314 70 C320 58 330 42 337 30 C331 38 325 50 323 58 C329 46 333 34 335 22 C327 34 316 54 310 70 C304 56 298 40 296 24 C291 40 290 60 292 82 Z" 
+          fill="#fef08a" stroke="#081d58" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" />
+
+    <!-- Ears -->
+    <!-- Left Ear -->
+    <g transform="rotate(-24 216 112)">
+      <path d="M216 112 C196 104 186 88 202 72 C220 74 226 95 216 112 Z" fill="#ea580c" stroke="#081d58" stroke-width="3" stroke-linejoin="round" />
+      <path d="M214 107 C200 101 194 89 204 79 C217 81 221 95 214 107 Z" fill="#fbcfe8" />
+    </g>
+    <!-- Right Ear -->
+    <g transform="rotate(24 324 112)">
+      <path d="M324 112 C344 104 354 88 338 72 C320 74 314 95 324 112 Z" fill="#ea580c" stroke="#081d58" stroke-width="3" stroke-linejoin="round" />
+      <path d="M326 107 C340 101 346 89 336 79 C323 81 319 95 326 107 Z" fill="#fbcfe8" />
+    </g>
+
+    <!-- Head Base -->
+    <ellipse cx="270" cy="126" rx="44" ry="40" fill="#f97316" stroke="#081d58" stroke-width="3.5" />
+
+    <!-- Forehead Hair Tuft -->
+    <path d="M262 88 C266 79 270 81 270 85 C273 77 278 79 277 88 C281 80 285 83 283 91 Z" fill="#f97316" stroke="#081d58" stroke-width="2.5" />
+
+    <!-- Light Muzzle & Cheeks (Cream patch) -->
+    <path d="M236 128 C236 112 251 114 270 118 C289 114 304 112 304 128 C304 149 289 157 270 157 C251 157 236 149 236 128 Z" 
+          fill="#fffbeb" stroke="#081d58" stroke-width="2" />
+
+    <!-- Pink Blush Cheeks -->
+    <ellipse cx="242" cy="140" rx="9" ry="5" fill="#f472b6" opacity="0.65" />
+    <ellipse cx="298" cy="140" rx="9" ry="5" fill="#f472b6" opacity="0.65" />
+
+    <!-- Cute Anime Eyes -->
+    <!-- Left Eye -->
+    <g>
+      <ellipse cx="251" cy="128" rx="8" ry="9.5" fill="#1e1b4b" />
+      <circle cx="248.5" cy="124" r="3.2" fill="#ffffff" />
+      <circle cx="253.5" cy="131.5" r="1.5" fill="#ffffff" />
+    </g>
+    <!-- Right Eye -->
+    <g>
+      <ellipse cx="289" cy="128" rx="8" ry="9.5" fill="#1e1b4b" />
+      <circle cx="286.5" cy="124" r="3.2" fill="#ffffff" />
+      <circle cx="291.5" cy="131.5" r="1.5" fill="#ffffff" />
+    </g>
+
+    <!-- Inverted Triangle Nose -->
+    <path d="M266 137 Q270 135 274 137 Q270 142 266 137 Z" fill="#1e1b4b" stroke="#1e1b4b" stroke-width="1" />
+
+    <!-- Cheerful Smile -->
+    <path d="M263 144 Q270 152 277 144" fill="none" stroke="#1e1b4b" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M266 145 Q270 150 274 145" fill="#fb7185" />
+
+    <!-- Body: Green Trousers / Legs -->
+    <path d="M255 198 L250 248 L263 248 L268 214 L272 214 L277 248 L290 248 L285 198 Z" 
+          fill="#16a34a" stroke="#081d58" stroke-width="3" stroke-linejoin="round" />
+    <path d="M270 206 L270 218" stroke="#081d58" stroke-width="2" stroke-linecap="round" />
+
+    <!-- White / Blue Shoes -->
+    <!-- Left Foot -->
+    <path d="M246 246 Q242 252 250 254 L263 254 Q265 250 263 246 Z" fill="#ffffff" stroke="#081d58" stroke-width="2.5" stroke-linejoin="round" />
+    <!-- Right Foot -->
+    <path d="M277 246 Q275 250 277 254 L290 254 Q298 252 294 246 Z" fill="#ffffff" stroke="#081d58" stroke-width="2.5" stroke-linejoin="round" />
+
+    <!-- Yellow T-Shirt -->
+    <path d="M251 158 Q270 160 289 158 L293 200 Q270 204 247 200 Z" 
+          fill="#facc15" stroke="#081d58" stroke-width="3" stroke-linejoin="round" />
+
+    <!-- Right Arm (Resting on side) -->
+    <path d="M289 162 Q301 174 301 190 Q301 198 297 202" fill="#facc15" stroke="#081d58" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="297" cy="206" r="5" fill="#ea580c" stroke="#081d58" stroke-width="2.5" />
+
+    <!-- Left Arm (WAVING HELLO!) -->
+    <path d="M253 166 C242 160 231 149 222 134" fill="none" stroke="#facc15" stroke-width="11" stroke-linecap="round" />
+    <path d="M253 166 C242 160 231 149 222 134" fill="none" stroke="#081d58" stroke-width="3" />
+    <!-- Hand / Hoof -->
+    <path d="M222 134 C220 130 215 127 210 127 C205 127 201 131 203 136 C204 140 210 144 218 142 Z" 
+          fill="#ea580c" stroke="#081d58" stroke-width="2.5" stroke-linejoin="round" />
+  </g>
+
+  <!-- ==================== LEFT PLAYFUL BUBBLE ART ==================== -->
+  <g id="treo-left-bubble-art" stroke="#081d58" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Top red character loop -->
+    <path d="M52 215 C44 200 56 182 76 182 C92 182 102 195 94 210 C86 226 60 228 52 215 Z" fill="#ef4444" />
+    <path d="M46 196 C46 186 58 178 68 186" fill="none" stroke="#ffffff" stroke-width="2.5" />
+
+    <!-- Green boxy character with window -->
+    <rect x="94" y="180" width="34" height="38" rx="8" fill="#22c55e" />
+    <rect x="101" y="188" width="20" height="15" rx="3" fill="#ffffff" stroke="#081d58" stroke-width="3" />
+    <path d="M96 184 L114 184" fill="none" stroke="#ffffff" stroke-width="2" />
+
+    <!-- Cyan looped character -->
+    <path d="M136 178 C146 178 152 186 152 196 C152 212 140 222 128 220 C118 218 118 200 130 192 L150 192" fill="#06b6d4" />
+    <circle cx="138" cy="184" r="2" fill="#ffffff" />
+
+    <!-- Yellow character -->
+    <path d="M162 180 C172 180 180 188 180 200 C180 216 168 224 156 222" fill="#facc15" />
+    <circle cx="170" cy="186" r="2" fill="#ffffff" />
+
+    <!-- Bottom pink rounded bar -->
+    <path d="M50 235 L128 235" stroke="#ec4899" stroke-width="10" stroke-linecap="round" />
+    <path d="M50 235 L128 235" stroke="#081d58" stroke-width="3" stroke-linecap="round" fill="none" />
+  </g>
+
+  <!-- ==================== 'TREO' BUBBLE LETTERS ==================== -->
+  <g id="treo-letters" stroke="#081d58" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">
+    <!-- Letter T (Red) -->
+    <g id="bubble-T">
+      <path d="M330 186 C330 177 337 172 346 172 L386 172 C394 172 400 177 400 186 C400 193 394 198 384 198 L372 198 L372 225 C372 233 366 238 358 238 C350 238 344 233 344 225 L344 198 L346 198 C337 198 330 193 330 186 Z" 
+            fill="#ef4444" />
+      <!-- White shine highlight -->
+      <path d="M340 178 L378 178" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" />
+      <path d="M350 194 L350 220" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" />
+    </g>
+
+    <!-- Letter R (Vibrant Blue) -->
+    <g id="bubble-R">
+      <path d="M404 176 C404 172 409 170 416 170 L436 170 C448 170 456 177 456 188 C456 196 450 202 440 205 L452 228 C455 234 451 239 444 239 C438 239 434 236 430 228 L422 210 L420 210 L420 227 C420 234 415 239 408 239 C404 239 402 235 402 228 Z" 
+            fill="#2563eb" />
+      <!-- R Inner Hole -->
+      <ellipse cx="430" cy="188" rx="8" ry="6" fill="#ffffff" stroke="#081d58" stroke-width="4" />
+      <!-- White shine highlight -->
+      <path d="M412 176 C420 174 432 174 440 178" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" />
+      <path d="M410 186 L410 222" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" />
+    </g>
+
+    <!-- Letter E (Light Cyan) -->
+    <g id="bubble-E">
+      <path d="M462 184 C462 175 468 170 478 170 L502 170 C508 170 512 174 512 180 C512 186 508 190 502 190 L480 190 L480 198 L498 198 C504 198 508 202 508 207 C508 212 504 216 498 216 L480 216 L480 224 L504 224 C510 224 514 228 514 234 C514 240 510 244 504 244 L476 244 C466 244 462 238 462 228 Z" 
+            fill="#06b6d4" />
+      <!-- White shine highlight -->
+      <path d="M472 176 L500 176" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" />
+      <path d="M470 186 L470 232" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" />
+    </g>
+
+    <!-- Letter O (Sunny Yellow) -->
+    <g id="bubble-O">
+      <ellipse cx="512" cy="207" rx="22" ry="29" fill="#facc15" />
+      <!-- O Inner Hole -->
+      <ellipse cx="512" cy="207" rx="8" ry="12" fill="#ffffff" stroke="#081d58" stroke-width="4.5" />
+      <!-- White shine highlight -->
+      <path d="M502 188 C512 183 522 186 528 192" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" />
+    </g>
+  </g>
+
+  <!-- ==================== "ENTERPRISES" ==================== -->
+  <g id="treo-enterprises-wordmark">
+    <!-- Extra Bold, Chunky Navy Blue Typography -->
+    <text x="270" y="328" 
+          font-family="system-ui, -apple-system, 'Arial Rounded MT Bold', 'Nunito', 'Segoe UI', sans-serif" 
+          font-size="64" 
+          font-weight="900" 
+          letter-spacing="1.5" 
+          text-anchor="middle" 
+          fill="#081d58">ENTERPRISES</text>
+  </g>
+
+  <!-- ==================== "PAPER & OFFICE SUPPLIES" BADGE ==================== -->
+  <g id="treo-sub-badge" transform="translate(0, 348)">
+    <!-- Dark Navy Stadium Pill Banner -->
+    <rect x="25" y="0" width="490" height="54" rx="14" ry="14" fill="#081d58" filter="url(#treoShadow)" />
+    
+    <!-- White Crisp Uppercase Subtitle -->
+    <text x="270" y="36" 
+          font-family="Georgia, 'Times New Roman', serif, 'Arial', sans-serif" 
+          font-size="28" 
+          font-weight="700" 
+          letter-spacing="3" 
+          text-anchor="middle" 
+          fill="#ffffff">PAPER &amp; OFFICE SUPPLIES</text>
+  </g>
+</svg>

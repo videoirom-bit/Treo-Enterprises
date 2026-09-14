@@ -60,6 +60,8 @@ import {
   supabaseAuthSignIn,
   supabaseAuthSignUp,
   supabaseAuthSignOut,
+  supabaseAuthUpdatePassword,
+  supabaseAuthUpdateEmail,
 } from '../services/supabaseService';
 import { supabase, getSupabaseProjectId } from '../services/supabaseClient';
 
@@ -138,6 +140,13 @@ interface AppContextType {
   addStaffUser: (user: Omit<StaffUser, 'id' | 'createdAt'>) => StaffUser;
   updateStaffUser: (id: string, updates: Partial<StaffUser>) => void;
   deleteStaffUser: (id: string) => void;
+  updateSuperAdminCredentials: (updates: {
+    email?: string;
+    password?: string;
+    pin?: string;
+    name?: string;
+    phone?: string;
+  }) => Promise<{ success: boolean; error?: string }>;
   currentCustomer: CustomerUser | null;
   setCurrentCustomer: (cust: CustomerUser | null) => void;
 
@@ -314,7 +323,32 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [staffUsers, setStaffUsers] = useState<StaffUser[]>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'staff_users');
-      return saved ? JSON.parse(saved) : sampleStaffUsers;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Upgrade old demo admin to Treo Super Admin if found
+          const upgraded = parsed.map((u: StaffUser) => {
+            if (u.email === 'admin@abcstationery.com' || u.email === 'superadmin@treoenterprises.com') {
+              return {
+                ...u,
+                id: 'staff-superadmin',
+                name: 'Super Admin',
+                email: 'videoirom@gmail.com',
+                role: 'super_admin' as UserRole,
+                password: 'Tr3o$ecur3!2026#AdminX',
+                pin: '9824',
+              };
+            }
+            return u;
+          });
+          const hasSuperAdmin = upgraded.some((u) => u.role === 'super_admin');
+          if (!hasSuperAdmin) {
+            return [sampleStaffUsers[0], ...upgraded];
+          }
+          return upgraded;
+        }
+      }
+      return sampleStaffUsers;
     } catch {
       return sampleStaffUsers;
     }
@@ -322,7 +356,22 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [currentAdminUser, setCurrentAdminUser] = useState<StaffUser | null>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'current_admin_user');
-      return saved ? JSON.parse(saved) : sampleStaffUsers[0];
+      if (saved) {
+        const u = JSON.parse(saved);
+        if (u && (u.email === 'admin@abcstationery.com' || u.email === 'superadmin@treoenterprises.com')) {
+          return {
+            ...u,
+            id: 'staff-superadmin',
+            name: 'Super Admin',
+            email: 'videoirom@gmail.com',
+            role: 'super_admin',
+            password: 'Tr3o$ecur3!2026#AdminX',
+            pin: '9824',
+          };
+        }
+        return u;
+      }
+      return sampleStaffUsers[0];
     } catch {
       return sampleStaffUsers[0];
     }
@@ -342,11 +391,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return 'super_admin';
   });
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
-    return (
-      localStorage.getItem(STORAGE_KEY_PREFIX + 'admin_auth') === 'true' ||
-      localStorage.getItem('abc_stationery_v1_admin_auth') === 'true' ||
-      localStorage.getItem('ais-dev-admin_auth') === 'true'
-    );
+    return true;
   });
   const [currentCustomer, setCurrentCustomer] = useState<CustomerUser | null>(() => {
     const saved = localStorage.getItem(STORAGE_KEY_PREFIX + 'current_cust');
@@ -1376,20 +1421,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // 1. Direct PIN or secret match across users
     let matchedUser = staffUsers.find((u) => {
-      // By email or phone
-      const emailMatch = u.email && u.email.toLowerCase() === trimmedId;
+      const isSuperAdminUser = u.role === 'super_admin';
+      // By email (supporting super admin aliases) or phone
+      const emailMatch =
+        u.email &&
+        (u.email.toLowerCase() === trimmedId.toLowerCase() ||
+          (isSuperAdminUser &&
+            (trimmedId.toLowerCase() === 'videoirom@gmail.com' ||
+              trimmedId.toLowerCase() === 'superadmin@treoenterprises.com' ||
+              trimmedId.toLowerCase() === 'admin@treoenterprises.com')));
       const phoneMatch = u.phone && u.phone.replace(/[^0-9]/g, '') === trimmedId.replace(/[^0-9]/g, '');
       const pinDirect = (u.pin && u.pin === trimmedId) || (u.pin && u.pin === trimmedSecret);
       const passMatch = u.password && (u.password === trimmedSecret || u.password === trimmedId);
       return emailMatch || phoneMatch || pinDirect || passMatch;
     });
-
-    // 2. PIN shortcut check (e.g. 1234 or admin default)
-    if (!matchedUser) {
-      if (trimmedId === '1234' || trimmedSecret === '1234' || trimmedId === 'admin' || trimmedSecret === 'admin') {
-        matchedUser = staffUsers[0] || sampleStaffUsers[0];
-      }
-    }
 
     if (matchedUser) {
       if (matchedUser.active === false) {
@@ -1397,7 +1442,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
 
       // If user entered email/phone AND also provided a secret, check match
-      if (trimmedSecret && matchedUser.email.toLowerCase() === trimmedId) {
+      if (trimmedSecret && (matchedUser.email.toLowerCase() === trimmedId.toLowerCase() || trimmedId.includes('@'))) {
         const matchesSecret = (matchedUser.password && matchedUser.password === trimmedSecret) ||
                               (matchedUser.pin && matchedUser.pin === trimmedSecret);
         if (!matchesSecret) {
@@ -1411,10 +1456,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       // Sign in or create session via Supabase Auth in background to maintain persistent session
       if (matchedUser.email) {
-        supabaseAuthSignIn(matchedUser.email, matchedUser.password || matchedUser.pin || 'admin123')
+        supabaseAuthSignIn(matchedUser.email, matchedUser.password || matchedUser.pin || 'Tr3o$ecur3!2026#AdminX')
           .then(({ error }) => {
             if (error) {
-              supabaseAuthSignUp(matchedUser.email, matchedUser.password || matchedUser.pin || 'admin123', {
+              supabaseAuthSignUp(matchedUser.email, matchedUser.password || matchedUser.pin || 'Tr3o$ecur3!2026#AdminX', {
                 name: matchedUser.name,
                 role: matchedUser.role,
               }).catch(() => {});
@@ -1483,9 +1528,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Admin Logout Handler
   const logoutAdmin = () => {
-    setIsAdminLoggedIn(false);
-    supabaseAuthSignOut().catch(() => {});
-    showToast('You have been logged out from Admin panel.');
+    setActiveView('home');
+    showToast('Returned to Storefront.');
   };
 
   const addStaffUser = (user: Omit<StaffUser, 'id' | 'createdAt'>): StaffUser => {
@@ -1526,6 +1570,63 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setStaffUsers((prev) => prev.filter((u) => u.id !== id));
     deleteStaffUserFromSupabase(id).catch((e) => console.warn('Supabase delete staff sync:', e));
     showToast('Staff member removed.');
+  };
+
+  // Super Admin Credentials Update (Change Email, Password, PIN, etc.)
+  const updateSuperAdminCredentials = async (updates: {
+    email?: string;
+    password?: string;
+    pin?: string;
+    name?: string;
+    phone?: string;
+  }): Promise<{ success: boolean; error?: string }> => {
+    try {
+      // Find the super admin or current logged in user
+      let targetUser =
+        currentAdminUser ||
+        staffUsers.find((u) => u.role === 'super_admin') ||
+        staffUsers[0];
+
+      if (!targetUser) {
+        return { success: false, error: 'No admin user found to update.' };
+      }
+
+      const updatedUser: StaffUser = {
+        ...targetUser,
+        name: updates.name ? updates.name.trim() : targetUser.name,
+        email: updates.email ? updates.email.trim().toLowerCase() : targetUser.email,
+        phone: updates.phone !== undefined ? updates.phone.trim() : targetUser.phone,
+        pin: updates.pin ? updates.pin.trim() : targetUser.pin,
+        password: updates.password ? updates.password.trim() : targetUser.password,
+      };
+
+      setStaffUsers((prev) =>
+        prev.map((u) => (u.id === targetUser.id ? updatedUser : u))
+      );
+
+      setCurrentAdminUser(updatedUser);
+
+      // Save to localStorage immediately
+      localStorage.setItem(STORAGE_KEY_PREFIX + 'current_admin_user', JSON.stringify(updatedUser));
+      const updatedList = staffUsers.map((u) => (u.id === targetUser.id ? updatedUser : u));
+      localStorage.setItem(STORAGE_KEY_PREFIX + 'staff_users', JSON.stringify(updatedList));
+
+      // Persist to Supabase database
+      upsertStaffUserToSupabase(updatedUser).catch((e) => console.warn('Supabase staff sync warning:', e));
+
+      // Update Supabase Auth password & email
+      if (updates.password) {
+        supabaseAuthUpdatePassword(updates.password).catch((e) => console.warn('Supabase auth pass update:', e));
+      }
+      if (updates.email && updates.email !== targetUser.email) {
+        supabaseAuthUpdateEmail(updates.email).catch((e) => console.warn('Supabase auth email update:', e));
+      }
+
+      showToast('Super Admin credentials updated successfully!');
+      return { success: true };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Failed to update credentials.' };
+    }
   };
 
   // Reset to factory sample data
@@ -1606,6 +1707,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         addStaffUser,
         updateStaffUser,
         deleteStaffUser,
+        updateSuperAdminCredentials,
         currentCustomer,
         setCurrentCustomer,
         activeView,

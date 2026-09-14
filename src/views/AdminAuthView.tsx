@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { ABCStoreLogo } from '../components/ABCStoreLogo';
 import {
   Shield,
   Key,
@@ -16,10 +17,13 @@ import {
   LogIn,
   Sparkles,
   BadgeCheck,
+  Copy,
+  Check,
 } from 'lucide-react';
 import { UserRole } from '../types';
 import { googleSignIn } from '../services/firebaseAuth';
 import { supabaseAuthResetPassword } from '../services/supabaseService';
+import { SuperAdminCredentialsModal } from '../components/SuperAdminCredentialsModal';
 
 export const AdminAuthView: React.FC = () => {
   const {
@@ -32,28 +36,33 @@ export const AdminAuthView: React.FC = () => {
     showToast,
   } = useApp();
 
-  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
-  const [loginMethod, setLoginMethod] = useState<'pin' | 'password'>('pin');
+  const superAdminUser = staffUsers.find((u) => u.role === 'super_admin') || staffUsers[0];
 
-  // Forgot password modal
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('login');
+  const [loginMethod, setLoginMethod] = useState<'pin' | 'password'>('password');
+
+  // Forgot password modal & Super Admin credentials modal
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showSuperAdminModal, setShowSuperAdminModal] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
   const [resetStatus, setResetStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [resetMessage, setResetMessage] = useState('');
 
-  // Login form states
-  const [loginIdentifier, setLoginIdentifier] = useState('admin@abcstationery.com');
-  const [loginPassword, setLoginPassword] = useState('admin');
-  const [loginPin, setLoginPin] = useState('1234');
+  // Login form states (no unwanted demo pre-fill)
+  const [loginIdentifier, setLoginIdentifier] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginPin, setLoginPin] = useState('');
   const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSecretInCard, setShowSecretInCard] = useState(false);
+  const [copiedCreds, setCopiedCreds] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Sign up form states
+  // Sign up form states (default to super_admin)
   const [signUpName, setSignUpName] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPhone, setSignUpPhone] = useState('');
-  const [signUpRole, setSignUpRole] = useState<UserRole>('admin');
+  const [signUpRole, setSignUpRole] = useState<UserRole>('super_admin');
   const [signUpPin, setSignUpPin] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpConfirmPassword, setSignUpConfirmPassword] = useState('');
@@ -73,7 +82,7 @@ export const AdminAuthView: React.FC = () => {
         }
         const result = loginAdmin(loginPin.trim());
         if (!result.success) {
-          setErrorMessage(result.error || 'Invalid Security PIN. Default demo PIN is 1234.');
+          setErrorMessage(result.error || 'Invalid Security PIN. Please verify your PIN.');
         }
       } else {
         if (!loginIdentifier.trim()) {
@@ -192,16 +201,18 @@ export const AdminAuthView: React.FC = () => {
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-3 sm:p-6">
       <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-2xl p-5 sm:p-8 space-y-6">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto rounded-2xl bg-teal-50 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-800 flex items-center justify-center text-teal-600 dark:text-teal-400 shadow-sm">
-            <Shield className="w-7 h-7 sm:w-8 sm:h-8" />
+        <div className="text-center space-y-3">
+          <div className="flex justify-center">
+            <img
+              src="/treo-logo.svg"
+              alt="Treo Enterprises"
+              className="h-20 sm:h-24 w-auto object-contain mx-auto"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div>
-            <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              {shopSettings.shopName}
-            </h2>
-            <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
-              Staff & Administration Portal
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Staff &amp; Administration Portal
             </p>
           </div>
         </div>
@@ -292,7 +303,7 @@ export const AdminAuthView: React.FC = () => {
                       <Key className="w-3.5 h-3.5 text-teal-600" />
                       4-Digit Staff / Admin PIN
                     </label>
-                    <span className="text-[10px] text-slate-400 font-medium">Default: 1234</span>
+                    <span className="text-[10px] text-teal-600 dark:text-teal-400 font-medium">Quick Counter Access</span>
                   </div>
                   <input
                     id="admin-pin-input"
@@ -318,7 +329,7 @@ export const AdminAuthView: React.FC = () => {
                         type="text"
                         value={loginIdentifier}
                         onChange={(e) => setLoginIdentifier(e.target.value)}
-                        placeholder="e.g. admin@abcstationery.com"
+                        placeholder="e.g. videoirom@gmail.com"
                         className="w-full py-2.5 pl-10 pr-4 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none transition"
                       />
                     </div>
@@ -411,50 +422,7 @@ export const AdminAuthView: React.FC = () => {
               </button>
             </div>
 
-            {/* Quick Demo Credentials */}
-            <div className="p-3 bg-slate-50 dark:bg-slate-900/90 rounded-2xl border border-slate-100 dark:border-slate-800 space-y-2 text-left">
-              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 block flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                Quick Demo Accounts (1-Click Fill):
-              </span>
-              <div className="grid grid-cols-2 gap-1.5">
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('admin@abcstationery.com', '1234', 'admin')}
-                  className="p-1.5 text-left rounded-lg bg-white dark:bg-slate-800 hover:border-teal-400 border border-slate-200 dark:border-slate-700 transition"
-                >
-                  <div className="font-bold text-[11px] text-teal-700 dark:text-teal-300">Owner (Super Admin)</div>
-                  <div className="text-[10px] text-slate-400 font-mono">PIN: 1234</div>
-                </button>
 
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('manager@abcstationery.com', '5678', 'manager123')}
-                  className="p-1.5 text-left rounded-lg bg-white dark:bg-slate-800 hover:border-teal-400 border border-slate-200 dark:border-slate-700 transition"
-                >
-                  <div className="font-bold text-[11px] text-slate-700 dark:text-slate-200">Store Manager</div>
-                  <div className="text-[10px] text-slate-400 font-mono">PIN: 5678</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('billing@abcstationery.com', '1111', 'billing123')}
-                  className="p-1.5 text-left rounded-lg bg-white dark:bg-slate-800 hover:border-teal-400 border border-slate-200 dark:border-slate-700 transition"
-                >
-                  <div className="font-bold text-[11px] text-slate-700 dark:text-slate-200">Billing & POS</div>
-                  <div className="text-[10px] text-slate-400 font-mono">PIN: 1111</div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleQuickLogin('inventory@abcstationery.com', '2222', 'inventory123')}
-                  className="p-1.5 text-left rounded-lg bg-white dark:bg-slate-800 hover:border-teal-400 border border-slate-200 dark:border-slate-700 transition"
-                >
-                  <div className="font-bold text-[11px] text-slate-700 dark:text-slate-200">Inventory Staff</div>
-                  <div className="text-[10px] text-slate-400 font-mono">PIN: 2222</div>
-                </button>
-              </div>
-            </div>
           </div>
         )}
 
@@ -492,7 +460,7 @@ export const AdminAuthView: React.FC = () => {
                     required
                     value={signUpEmail}
                     onChange={(e) => setSignUpEmail(e.target.value)}
-                    placeholder="staff@abcstationery.com"
+                    placeholder="superadmin@treoenterprises.com"
                     className="w-full py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   />
                 </div>
@@ -741,6 +709,13 @@ export const AdminAuthView: React.FC = () => {
             )}
           </div>
         </div>
+      )}
+
+      {/* Super Admin Credentials & Password Change Modal */}
+      {showSuperAdminModal && (
+        <SuperAdminCredentialsModal
+          onClose={() => setShowSuperAdminModal(false)}
+        />
       )}
     </div>
   );
