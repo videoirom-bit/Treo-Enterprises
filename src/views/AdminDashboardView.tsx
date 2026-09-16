@@ -105,6 +105,10 @@ const INDIAN_STATES_GST = [
 
 const PRESET_LOGOS = [
   {
+    label: 'Treo Official Logo',
+    url: '/treo-logo.svg',
+  },
+  {
     label: 'Stationery Pen & Book',
     url: 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=200&h=200&q=80',
   },
@@ -137,7 +141,7 @@ const getNormalizedShopForm = (s?: Partial<ShopSettings>): ShopSettings => {
 
   return {
     shopName: s?.shopName ?? 'ABC Paper & Stationery',
-    shopLogo: s?.shopLogo ?? 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=200&h=200&q=80',
+    shopLogo: s?.shopLogo ?? '/treo-logo.svg',
     tagline: s?.tagline ?? 'Order Tracking, GST Invoicing & Premium Stationery',
     ownerName: s?.ownerName ?? 'Mr. Anand Agrawal',
     shopAddress: s?.shopAddress ?? 'Shop No. 12-14, Ground Floor, Sharda Complex, Pandri Market',

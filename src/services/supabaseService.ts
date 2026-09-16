@@ -609,7 +609,7 @@ export async function fetchShopSettingsFromSupabase(): Promise<ShopSettings | nu
 
     return {
       shopName: data.shop_name || full.shopName || 'ABC Paper & Stationery',
-      shopLogo: data.shop_logo || full.shopLogo || 'https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?auto=format&fit=crop&w=200&h=200&q=80',
+      shopLogo: data.shop_logo || full.shopLogo || '/treo-logo.svg',
       tagline: data.tagline || full.tagline || 'Order Tracking, GST Invoicing & Premium Stationery',
       ownerName: data.owner_name || full.ownerName || 'Mr. Anand Agrawal',
       shopAddress: data.shop_address || full.shopAddress || 'Shop No. 12-14, Ground Floor, Sharda Complex, Pandri Market',

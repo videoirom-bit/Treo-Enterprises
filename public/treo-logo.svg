@@ -22,12 +22,12 @@
     <!-- Left Ear -->
     <g transform="rotate(-24 216 112)">
       <path d="M216 112 C196 104 186 88 202 72 C220 74 226 95 216 112 Z" fill="#ea580c" stroke="#081d58" stroke-width="3" stroke-linejoin="round" />
-      <path d="M214 107 C200 101 194 89 204 79 C217 81 221 95 214 107 Z" fill="#fbcfe8" />
+      <path d="M214 107 C200 101 194 89 204 79 C217 81 221 95 214 107 Z" fill="#ffffff" stroke="#081d58" stroke-width="1" />
     </g>
     <!-- Right Ear -->
     <g transform="rotate(24 324 112)">
       <path d="M324 112 C344 104 354 88 338 72 C320 74 314 95 324 112 Z" fill="#ea580c" stroke="#081d58" stroke-width="3" stroke-linejoin="round" />
-      <path d="M326 107 C340 101 346 89 336 79 C323 81 319 95 326 107 Z" fill="#fbcfe8" />
+      <path d="M326 107 C340 101 346 89 336 79 C323 81 319 95 326 107 Z" fill="#ffffff" stroke="#081d58" stroke-width="1" />
     </g>
 
     <!-- Head Base -->
@@ -127,10 +127,10 @@
       <path d="M350 194 L350 220" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" />
     </g>
 
-    <!-- Letter R (Vibrant Blue) -->
+    <!-- Letter R (Vibrant Green) -->
     <g id="bubble-R">
       <path d="M404 176 C404 172 409 170 416 170 L436 170 C448 170 456 177 456 188 C456 196 450 202 440 205 L452 228 C455 234 451 239 444 239 C438 239 434 236 430 228 L422 210 L420 210 L420 227 C420 234 415 239 408 239 C404 239 402 235 402 228 Z" 
-            fill="#2563eb" />
+            fill="#22c55e" />
       <!-- R Inner Hole -->
       <ellipse cx="430" cy="188" rx="8" ry="6" fill="#ffffff" stroke="#081d58" stroke-width="4" />
       <!-- White shine highlight -->
