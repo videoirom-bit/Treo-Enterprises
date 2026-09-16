@@ -223,14 +223,14 @@ export const TrackOrderView: React.FC = () => {
                   value={inputQuery}
                   onChange={(e) => setInputQuery(e.target.value)}
                   placeholder="Enter Order ID (e.g., ABC-2026-00125) or Mobile (9876500125)"
-                  className="w-full pl-11 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
+                  className="w-full min-h-[48px] pl-11 pr-14 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition"
                 />
-                <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-4" />
+                <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 {inputQuery && (
                   <button
                     type="button"
                     onClick={() => setInputQuery('')}
-                    className="absolute right-3.5 top-4 text-xs font-medium text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 min-h-[36px] px-2 text-xs font-medium text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 flex items-center cursor-pointer"
                   >
                     Clear
                   </button>
@@ -239,7 +239,7 @@ export const TrackOrderView: React.FC = () => {
               <button
                 id="track-order-search-btn"
                 type="submit"
-                className="px-6 py-3.5 bg-blue-700 hover:bg-blue-600 active:scale-98 text-white font-bold rounded-2xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer shrink-0 text-sm sm:text-base"
+                className="w-full sm:w-auto min-h-[48px] px-6 py-3.5 bg-blue-700 hover:bg-blue-600 active:scale-98 text-white font-bold rounded-2xl shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 cursor-pointer shrink-0 text-sm sm:text-base touch-manipulation"
               >
                 <Search className="w-4 h-4" />
                 <span>Track Order</span>
@@ -378,7 +378,7 @@ export const TrackOrderView: React.FC = () => {
                       setSelectedOrderForInvoice(selectedOrder);
                       setActiveView('invoice-view');
                     }}
-                    className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition"
+                    className="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold flex items-center gap-1.5 transition cursor-pointer touch-manipulation"
                   >
                     <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     <span>View GST Invoice</span>
@@ -387,7 +387,7 @@ export const TrackOrderView: React.FC = () => {
                   <button
                     id="track-reorder-btn"
                     onClick={() => reorderItems(selectedOrder)}
-                    className="px-3.5 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center gap-1.5 transition border border-blue-200 dark:border-blue-800"
+                    className="min-h-[44px] px-3.5 py-2 rounded-xl bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900/60 text-blue-700 dark:text-blue-300 text-xs font-bold flex items-center gap-1.5 transition border border-blue-200 dark:border-blue-800 cursor-pointer touch-manipulation"
                   >
                     <RotateCw className="w-4 h-4 text-blue-600" />
                     <span>Reorder All</span>
@@ -396,7 +396,7 @@ export const TrackOrderView: React.FC = () => {
                   <button
                     onClick={copyTrackingLink}
                     title="Share tracking link"
-                    className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs transition"
+                    className="min-h-[44px] min-w-[44px] p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs transition flex items-center justify-center cursor-pointer touch-manipulation"
                   >
                     <Share2 className="w-4 h-4" />
                   </button>
@@ -500,14 +500,14 @@ export const TrackOrderView: React.FC = () => {
                 <div className="flex items-center gap-2 w-full sm:w-auto">
                   <button
                     onClick={callDeliveryPerson}
-                    className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-xs"
+                    className="flex-1 sm:flex-none min-h-[44px] px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-xs cursor-pointer touch-manipulation"
                   >
                     <Phone className="w-3.5 h-3.5" />
                     <span>Call Rider</span>
                   </button>
                   <button
                     onClick={openWhatsAppHelp}
-                    className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-xs"
+                    className="flex-1 sm:flex-none min-h-[44px] px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-xs cursor-pointer touch-manipulation"
                   >
                     <MessageCircle className="w-3.5 h-3.5" />
                     <span>WhatsApp</span>

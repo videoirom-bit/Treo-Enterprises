@@ -458,13 +458,13 @@ export const ProductBarcodeModal: React.FC<ProductBarcodeModalProps> = ({
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   {[1, 4, 8, 12, 24].map((cnt) => (
                     <button
                       key={cnt}
                       type="button"
                       onClick={() => setCopies(cnt)}
-                      className={`flex-1 py-1.5 px-2 rounded-lg border font-bold text-xs transition ${
+                      className={`flex-1 min-w-[40px] py-1.5 px-2 rounded-lg border font-bold text-xs transition ${
                         copies === cnt
                           ? 'bg-teal-600 text-white border-teal-600 shadow-2xs'
                           : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50'
@@ -474,7 +474,7 @@ export const ProductBarcodeModal: React.FC<ProductBarcodeModalProps> = ({
                     </button>
                   ))}
 
-                  <div className="w-20">
+                  <div className="w-20 min-w-[70px]">
                     <input
                       type="number"
                       min={1}
@@ -491,11 +491,11 @@ export const ProductBarcodeModal: React.FC<ProductBarcodeModalProps> = ({
               </div>
 
               {/* Action Buttons */}
-              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between gap-3">
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-semibold transition"
+                  className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-semibold transition cursor-pointer touch-manipulation text-center"
                 >
                   Cancel
                 </button>
@@ -505,7 +505,7 @@ export const ProductBarcodeModal: React.FC<ProductBarcodeModalProps> = ({
                   id="print-barcode-action-btn"
                   onClick={handlePrint}
                   disabled={isPrinting}
-                  className="flex-1 sm:flex-initial px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 text-xs"
+                  className="w-full sm:w-auto flex-1 min-h-[44px] px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold shadow-md hover:shadow-lg transition flex items-center justify-center gap-2 text-xs cursor-pointer touch-manipulation"
                 >
                   <Printer className="w-4 h-4" />
                   <span>

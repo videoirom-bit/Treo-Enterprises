@@ -681,7 +681,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                 setCurrentUserRole('super_admin');
                 showToast('Switched to Super Admin session. Access granted.');
               }}
-              className="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md transition cursor-pointer"
+              className="w-full min-h-[44px] py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md transition cursor-pointer touch-manipulation"
             >
               <ShieldCheck className="w-4 h-4" />
               <span>Switch to Super Admin (Store Owner)</span>
@@ -697,7 +697,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   setPinError(true);
                 }
               }}
-              className="flex gap-2"
+              className="flex flex-col sm:flex-row gap-2"
             >
               <input
                 type="password"
@@ -708,11 +708,11 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   setUnlockPin(e.target.value);
                   setPinError(false);
                 }}
-                className="flex-1 px-3 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
+                className="w-full sm:flex-1 min-h-[44px] px-3.5 py-2 text-xs rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
               />
               <button
                 type="submit"
-                className="px-4 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition"
+                className="w-full sm:w-auto min-h-[44px] px-5 py-2 bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition cursor-pointer touch-manipulation flex items-center justify-center"
               >
                 Unlock
               </button>
@@ -722,7 +722,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
             <button
               type="button"
               onClick={onBackToInventory}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 mt-2 cursor-pointer"
+              className="inline-flex items-center justify-center min-h-[44px] gap-1.5 text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 mt-2 cursor-pointer touch-manipulation"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Return to Inventory Overview</span>
@@ -734,9 +734,9 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
   }
 
   return (
-    <div id="add-inventory-module" className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5">
+    <div id="add-inventory-module" className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3.5 sm:py-5 space-y-3.5 sm:space-y-4">
       {/* 1. BREADCRUMBS & TOP NAVIGATION */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-700/60 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-slate-200 dark:border-slate-700/60 pb-2.5">
         {/* Breadcrumb: Dashboard → Inventory → Add Inventory */}
         <nav
           aria-label="Breadcrumb"
@@ -768,7 +768,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
         <div className="flex items-center gap-2 text-xs">
           <div
             id="draft-save-status-badge"
-            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[11px] font-medium"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-[11px] font-medium"
           >
             {draftStatus === 'saved' ? (
               <>
@@ -802,41 +802,41 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
       </div>
 
       {/* 2. HEADER & PRIMARY ACTION CONTROLS */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xs">
-        <div className="flex items-center gap-3.5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white dark:bg-slate-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs">
+        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
           <button
             type="button"
             id="back-to-inventory-btn"
             onClick={onBackToInventory}
-            className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer shrink-0"
+            className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition cursor-pointer shrink-0"
             title="Back to Inventory"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4" />
           </button>
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+              <h1 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
                 {editingProduct ? 'Edit Inventory Item' : 'Add Inventory'}
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 flex items-center gap-1">
+              <span className="px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold bg-teal-50 dark:bg-teal-950/70 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800 flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3 text-teal-600 dark:text-teal-400" />
                 <span>Super Admin Module</span>
               </span>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Complete authority over product identity, stock levels, pricing, GST, suppliers, storage location, and ledger history.
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate sm:whitespace-normal">
+              Manage product identity, stock limits, pricing, GST, and storage location.
             </p>
           </div>
         </div>
 
         {/* Action Buttons: Cancel, Save & Add Another, Save Inventory */}
-        <div className="flex items-center gap-2 flex-wrap justify-end">
+        <div className="flex items-center gap-2 flex-wrap justify-start sm:justify-end w-full md:w-auto shrink-0">
           <button
             type="button"
             id="cancel-inventory-btn"
             onClick={onBackToInventory}
             disabled={isSubmitting}
-            className="px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/60 font-semibold text-xs transition cursor-pointer"
+            className="flex-1 sm:flex-initial min-h-[38px] px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/60 font-semibold text-xs transition cursor-pointer text-center"
           >
             Cancel
           </button>
@@ -848,10 +848,10 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               data-testid="save-and-add-another-btn"
               onClick={() => handleSave(true)}
               disabled={isSubmitting}
-              className="px-4 py-2.5 rounded-xl border border-teal-300 dark:border-teal-700 bg-teal-50 dark:bg-teal-950/50 hover:bg-teal-100 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 font-bold text-xs flex items-center gap-1.5 transition cursor-pointer"
+              className="flex-1 sm:flex-initial min-h-[38px] px-3 py-1.5 rounded-lg border border-teal-300 dark:border-teal-700 bg-teal-50 dark:bg-teal-950/50 hover:bg-teal-100 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
             >
-              <Plus className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-              <span>Save & Add Another</span>
+              <Plus className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400 shrink-0" />
+              <span className="truncate">Save & Add Another</span>
             </button>
           )}
 
@@ -861,9 +861,9 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
             data-testid="save-inventory-btn"
             onClick={() => handleSave(false)}
             disabled={isSubmitting}
-            className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-2 shadow-sm hover:shadow-md transition cursor-pointer"
+            className="w-full sm:w-auto min-h-[38px] px-4 py-1.5 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer"
           >
-            <Save className="w-4 h-4" />
+            <Save className="w-3.5 h-3.5 shrink-0" />
             <span>{isSubmitting ? 'Saving...' : 'Save Inventory'}</span>
           </button>
         </div>
@@ -873,11 +873,11 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
       {Object.keys(validationErrors).length > 0 && (
         <div
           id="inventory-validation-banner"
-          className="p-4 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 rounded-2xl text-red-800 dark:text-red-200 text-xs flex items-start gap-3 shadow-2xs"
+          className="p-3 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-900 rounded-xl text-red-800 dark:text-red-200 text-xs flex items-start gap-2.5 shadow-2xs"
         >
-          <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+          <AlertTriangle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
           <div className="flex-1 space-y-1">
-            <h4 className="font-bold text-sm">Please resolve the following required fields:</h4>
+            <h4 className="font-bold text-xs">Please resolve the following required fields:</h4>
             <ul className="list-disc pl-4 space-y-0.5 text-xs text-red-700 dark:text-red-300">
               {Object.values(validationErrors).map((msg, i) => (
                 <li key={i}>{msg}</li>
@@ -887,7 +887,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
           <button
             type="button"
             onClick={() => setValidationErrors({})}
-            className="text-red-400 hover:text-red-700 dark:hover:text-red-200 font-bold px-2 py-1 text-xs rounded"
+            className="text-red-400 hover:text-red-700 dark:hover:text-red-200 font-bold px-1.5 py-0.5 text-xs rounded"
           >
             Dismiss
           </button>
@@ -895,17 +895,17 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
       )}
 
       {/* MAIN STRUCTURED GRID */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3.5 sm:gap-4">
         {/* LEFT 2 COLUMNS: PRODUCT INFORMATION & CONTROLS */}
-        <div className="lg:col-span-2 space-y-5">
+        <div className="lg:col-span-2 space-y-3.5 sm:space-y-4">
           {/* SECTION 1: PRODUCT INFORMATION */}
-          <div className="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4">
-            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-700/60">
-              <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
-                <Tag className="w-4 h-4" />
+          <div className="bg-white dark:bg-slate-800 p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-3">
+            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-700/60">
+              <div className="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+                <Tag className="w-3.5 h-3.5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                   1. Product Information
                 </h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -914,10 +914,10 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
             </div>
 
-            <div className="space-y-4 text-xs">
+            <div className="space-y-3 text-xs">
               {/* Product Name * */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Product Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -930,7 +930,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     setName(e.target.value);
                     validateField('name', e.target.value);
                   }}
-                  className={`w-full p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-teal-500 transition ${
+                  className={`w-full px-3 py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-teal-500 transition text-xs sm:text-sm ${
                     validationErrors.name
                       ? 'border-red-500 focus:border-red-500'
                       : 'border-slate-200 dark:border-slate-700'
@@ -942,11 +942,11 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
 
               {/* SKU * & Barcode in 2 columns */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
                 {/* Product SKU * */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block font-bold text-slate-700 dark:text-slate-300">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300">
                       Product SKU <span className="text-red-500">*</span>
                     </label>
                     <button
@@ -969,7 +969,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                       setSku(e.target.value.toUpperCase());
                       validateField('sku', e.target.value);
                     }}
-                    className={`w-full p-2.5 rounded-xl border font-mono bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-bold uppercase transition ${
+                    className={`w-full px-2.5 py-1.5 sm:py-2 rounded-lg border font-mono bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white font-bold uppercase text-xs sm:text-sm transition ${
                       validationErrors.sku || duplicateSkuProduct
                         ? 'border-red-500 focus:border-red-500'
                         : 'border-slate-200 dark:border-slate-700 focus:border-teal-500'
@@ -988,8 +988,8 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
                 {/* Barcode */}
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="block font-bold text-slate-700 dark:text-slate-300">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block font-semibold text-slate-700 dark:text-slate-300">
                       Barcode (EAN-13 / UPC)
                     </label>
                     <button
@@ -1011,7 +1011,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                       setBarcode(e.target.value);
                       validateField('barcode', e.target.value);
                     }}
-                    className={`w-full p-2.5 rounded-xl border font-mono bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white transition ${
+                    className={`w-full px-2.5 py-1.5 sm:py-2 rounded-lg border font-mono bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white text-xs sm:text-sm transition ${
                       duplicateBarcodeProduct
                         ? 'border-red-500 focus:border-red-500'
                         : 'border-slate-200 dark:border-slate-700 focus:border-teal-500'
@@ -1027,10 +1027,10 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
 
               {/* Category *, Subcategory, Brand */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5">
                 {/* Product Category * */}
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Product Category <span className="text-red-500">*</span>
                   </label>
                   <select
@@ -1046,7 +1046,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                       else if (newCat === 'Pens' || newCat === 'Pencils') setHsnCode('9608');
                       else if (newCat === 'Computer Accessories') setHsnCode('8472');
                     }}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium"
+                    className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs sm:text-sm"
                   >
                     {STATIONERY_CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -1058,7 +1058,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
                 {/* Subcategory */}
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Subcategory
                   </label>
                   <input
@@ -1067,13 +1067,13 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     placeholder="e.g. Copier Paper, Ball Pen, Register"
                     value={subCategory}
                     onChange={(e) => setSubCategory(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs sm:text-sm"
                   />
                 </div>
 
                 {/* Brand */}
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Brand
                   </label>
                   <input
@@ -1082,7 +1082,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     placeholder="e.g. JK Copier, Classmate, Cello"
                     value={brand}
                     onChange={(e) => setBrand(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs sm:text-sm"
                   />
                 </div>
               </div>
@@ -1109,17 +1109,17 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
 
               {/* Product Type & Unit of Measurement */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 pt-0.5">
                 {/* Product Type */}
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Product Type
                   </label>
                   <select
                     id="product-type-select"
                     value={productType}
                     onChange={(e) => setProductType(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium"
+                    className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs sm:text-sm"
                   >
                     {PRODUCT_TYPES.map((pt) => (
                       <option key={pt.id} value={pt.id}>
@@ -1131,14 +1131,14 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
                 {/* Unit of Measurement (Piece, Box, Packet, Dozen, Kg, Gram, Litre, Meter) */}
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Unit of Measurement (UoM)
                   </label>
                   <select
                     id="unit-of-measurement-select"
                     value={unit}
                     onChange={(e) => setUnit(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                    className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs sm:text-sm"
                   >
                     {UNITS_OF_MEASUREMENT.map((u) => (
                       <option key={u} value={u}>
@@ -1150,10 +1150,10 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
 
               {/* HSN/SAC Code, GST Rate, Tax Type */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 pt-0.5">
                 {/* HSN/SAC Code */}
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     HSN/SAC Code
                   </label>
                   <input
@@ -1162,9 +1162,9 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     placeholder="e.g. 4802"
                     value={hsnCode}
                     onChange={(e) => setHsnCode(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border font-mono bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border font-mono bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs sm:text-sm"
                   />
-                  <div className="flex items-center gap-1 flex-wrap mt-1.5">
+                  <div className="flex items-center gap-1 flex-wrap mt-1">
                     {HSN_PRESETS.slice(0, 3).map((h) => (
                       <button
                         key={h.code}
@@ -1180,14 +1180,14 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
                 {/* GST Rate */}
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     GST Rate (%)
                   </label>
                   <select
                     id="gst-rate-select"
                     value={gstRate}
                     onChange={(e) => setGstRate(Number(e.target.value))}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                    className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs sm:text-sm"
                   >
                     {GST_RATES.map((rate) => (
                       <option key={rate} value={rate}>
@@ -1199,14 +1199,14 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
                 {/* Tax Type */}
                 <div>
-                  <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Tax Type
                   </label>
                   <select
                     id="tax-type-select"
                     value={taxType}
                     onChange={(e) => setTaxType(e.target.value as any)}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium"
+                    className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs sm:text-sm"
                   >
                     {TAX_TYPES.map((tt) => (
                       <option key={tt.id} value={tt.id}>
@@ -1219,31 +1219,31 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
               {/* Product Description */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Product Description
                 </label>
                 <textarea
                   id="product-description-input"
-                  rows={3}
+                  rows={2}
                   placeholder="Enter detailed specifications, page count, paper GSM, thickness, packaging details, and usage."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full p-3 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white leading-relaxed resize-y"
+                  className="w-full px-3 py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white leading-relaxed resize-y text-xs sm:text-sm"
                 />
               </div>
 
               {/* Product Image Upload & Presets */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Product Image Upload & Gallery
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-3.5 items-start">
                   {/* Image Drag & Drop / Upload area */}
                   <div className="sm:col-span-2 space-y-2">
                     <div
                       id="product-image-upload-zone"
                       onClick={() => fileInputRef.current?.click()}
-                      className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-teal-500 dark:hover:border-teal-400 rounded-2xl p-4 text-center cursor-pointer transition bg-slate-50/50 dark:bg-slate-900/50 hover:bg-slate-50 dark:hover:bg-slate-900"
+                      className="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-teal-500 dark:hover:border-teal-400 rounded-xl p-3 text-center cursor-pointer transition bg-slate-50/50 dark:bg-slate-900/50 hover:bg-slate-50 dark:hover:bg-slate-900"
                     >
                       <input
                         ref={fileInputRef}
@@ -1252,7 +1252,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                         onChange={handleFileUpload}
                         className="hidden"
                       />
-                      <Upload className="w-6 h-6 mx-auto text-slate-400 mb-1" />
+                      <Upload className="w-5 h-5 mx-auto text-slate-400 mb-1" />
                       <p className="font-semibold text-slate-700 dark:text-slate-300 text-xs">
                         Click to upload image or drag & drop
                       </p>
@@ -1267,19 +1267,19 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                         placeholder="Or paste external image URL..."
                         value={imageUrl}
                         onChange={(e) => setImageUrl(e.target.value)}
-                        className="flex-1 p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-[11px] text-slate-900 dark:text-white"
+                        className="flex-1 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-[11px] text-slate-900 dark:text-white"
                       />
                       <button
                         type="button"
                         onClick={() => setImageUrl(SAMPLE_STATIONERY_IMAGES[0].url)}
-                        className="px-2.5 py-2 text-[11px] font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100"
+                        className="px-2.5 py-1.5 text-[11px] font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100"
                       >
                         Reset
                       </button>
                     </div>
 
                     {/* Quick sample image picker */}
-                    <div className="pt-1">
+                    <div className="pt-0.5">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
                         Select stationery sample photo:
                       </span>
@@ -1289,7 +1289,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                             key={idx}
                             type="button"
                             onClick={() => setImageUrl(img.url)}
-                            className={`w-12 h-12 rounded-xl overflow-hidden border-2 shrink-0 transition cursor-pointer relative ${
+                            className={`w-10 h-10 rounded-lg overflow-hidden border-2 shrink-0 transition cursor-pointer relative ${
                               imageUrl === img.url
                                 ? 'border-teal-500 ring-2 ring-teal-500/20 shadow-xs'
                                 : 'border-slate-200 dark:border-slate-700 opacity-80 hover:opacity-100'
@@ -1309,8 +1309,8 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   </div>
 
                   {/* Image Preview Box */}
-                  <div className="flex flex-col items-center justify-center p-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60">
-                    <div className="w-24 h-24 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-2xs relative group bg-white dark:bg-slate-800">
+                  <div className="flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60">
+                    <div className="w-20 h-20 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shadow-2xs relative group bg-white dark:bg-slate-800">
                       {imageUrl ? (
                         <img
                           src={imageUrl}
@@ -1320,11 +1320,11 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-slate-400">
-                          <ImageIcon className="w-8 h-8" />
+                          <ImageIcon className="w-7 h-7" />
                         </div>
                       )}
                     </div>
-                    <span className="text-[10px] text-slate-500 font-medium mt-2">
+                    <span className="text-[10px] text-slate-500 font-medium mt-1.5">
                       Live Catalog Preview
                     </span>
                   </div>
@@ -1334,13 +1334,13 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
           </div>
 
           {/* SECTION 2: STOCK QUANTITIES & INVENTORY CONTROL (Super Admin) */}
-          <div className="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4">
-            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-700/60">
-              <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
-                <Package className="w-4 h-4" />
+          <div className="bg-white dark:bg-slate-800 p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-3">
+            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-700/60">
+              <div className="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+                <Package className="w-3.5 h-3.5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                   2. Stock Quantities & Inventory Limits
                 </h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1349,10 +1349,10 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 text-xs">
               {/* Opening Stock */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Opening Stock ({unit}s)
                 </label>
                 <input
@@ -1365,14 +1365,14 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     setOpeningStock(val);
                     if (!editingProduct) setCurrentStock(val);
                   }}
-                  className="w-full p-2.5 rounded-xl border font-bold text-base bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border font-bold text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
-                <span className="text-[10px] text-slate-400 mt-1 block">Initial balance</span>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">Initial balance</span>
               </div>
 
               {/* Current Available Stock */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Current Stock ({unit}s)
                 </label>
                 <input
@@ -1381,14 +1381,14 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   min="0"
                   value={currentStock}
                   onChange={(e) => setCurrentStock(Math.max(0, parseInt(e.target.value) || 0))}
-                  className="w-full p-2.5 rounded-xl border font-bold text-base bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-teal-700 dark:text-teal-400"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border font-bold text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-teal-700 dark:text-teal-400"
                 />
-                <span className="text-[10px] text-slate-400 mt-1 block">Live store balance</span>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">Live store balance</span>
               </div>
 
               {/* Minimum Stock / Reorder Point */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Min Stock (Reorder Alert)
                 </label>
                 <input
@@ -1397,14 +1397,14 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   min="1"
                   value={minimumStock}
                   onChange={(e) => setMinimumStock(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full p-2.5 rounded-xl border font-bold text-base bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-amber-600 dark:text-amber-400"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border font-bold text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-amber-600 dark:text-amber-400"
                 />
-                <span className="text-[10px] text-slate-400 mt-1 block">Triggers low stock badge</span>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">Triggers low stock badge</span>
               </div>
 
               {/* Maximum Stock Capacity */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Max Capacity
                 </label>
                 <input
@@ -1413,46 +1413,46 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   min="1"
                   value={maximumStock}
                   onChange={(e) => setMaximumStock(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-full p-2.5 rounded-xl border font-bold text-base bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border font-bold text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                 />
-                <span className="text-[10px] text-slate-400 mt-1 block">Bin storage capacity</span>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">Bin storage capacity</span>
               </div>
             </div>
 
             {/* Live Stock Health Indicator */}
-            <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
+            <div className="p-2.5 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-slate-600 dark:text-slate-400">Inventory Health:</span>
+                <span className="font-semibold text-slate-600 dark:text-slate-400 text-[11px] sm:text-xs">Inventory Health:</span>
                 {currentStock <= 0 ? (
-                  <span className="px-2.5 py-0.5 rounded-full font-bold bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 text-[11px]">
+                  <span className="px-2 py-0.5 rounded-full font-bold bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300 text-[11px]">
                     Out of Stock
                   </span>
                 ) : currentStock <= minimumStock ? (
-                  <span className="px-2.5 py-0.5 rounded-full font-bold bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 text-[11px] flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-full font-bold bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 text-[11px] flex items-center gap-1">
                     <AlertTriangle className="w-3 h-3" />
                     Low Stock Warning
                   </span>
                 ) : (
-                  <span className="px-2.5 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 text-[11px] flex items-center gap-1">
+                  <span className="px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 text-[11px] flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
                     Healthy Stock ({currentStock} {unit}s ready)
                   </span>
                 )}
               </div>
-              <span className="text-[11px] text-slate-400">
+              <span className="text-[10px] text-slate-400">
                 Reorder triggered when ≤ {minimumStock} {unit}s
               </span>
             </div>
           </div>
 
           {/* SECTION 3: PRICING & PROFIT MARGINS (Super Admin) */}
-          <div className="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4">
-            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-700/60">
-              <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
-                <Coins className="w-4 h-4" />
+          <div className="bg-white dark:bg-slate-800 p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-3">
+            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-700/60">
+              <div className="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+                <Coins className="w-3.5 h-3.5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                   3. Pricing & Margin Controls
                 </h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1461,14 +1461,14 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5 text-xs">
               {/* Purchase / Cost Price */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Purchase / Cost Price (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-slate-400 font-bold">₹</span>
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">₹</span>
                   <input
                     id="inventory-purchase-price-input"
                     type="number"
@@ -1476,19 +1476,19 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     step="0.5"
                     value={purchasePrice}
                     onChange={(e) => setPurchasePrice(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-7 pr-3 py-2.5 rounded-xl border font-bold text-base bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="w-full pl-6 pr-2.5 py-1.5 sm:py-2 rounded-lg border font-bold text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                   />
                 </div>
-                <span className="text-[10px] text-slate-400 mt-1 block">What store pays supplier</span>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">What store pays supplier</span>
               </div>
 
               {/* Selling Price */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Selling Price / Rate (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-teal-600 font-bold">₹</span>
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-teal-600 font-bold text-xs">₹</span>
                   <input
                     id="inventory-selling-price-input"
                     type="number"
@@ -1496,19 +1496,19 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     step="0.5"
                     value={sellingPrice}
                     onChange={(e) => setSellingPrice(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-7 pr-3 py-2.5 rounded-xl border font-bold text-base bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-teal-700 dark:text-teal-400"
+                    className="w-full pl-6 pr-2.5 py-1.5 sm:py-2 rounded-lg border font-bold text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-teal-700 dark:text-teal-400"
                   />
                 </div>
-                <span className="text-[10px] text-slate-400 mt-1 block">Retail customer rate</span>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">Retail customer rate</span>
               </div>
 
               {/* MRP */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Printed MRP (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-slate-400 font-bold">₹</span>
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">₹</span>
                   <input
                     id="inventory-mrp-input"
                     type="number"
@@ -1516,19 +1516,19 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     step="0.5"
                     value={mrp}
                     onChange={(e) => setMrp(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-7 pr-3 py-2.5 rounded-xl border font-bold text-base bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="w-full pl-6 pr-2.5 py-1.5 sm:py-2 rounded-lg border font-bold text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
                   />
                 </div>
-                <span className="text-[10px] text-slate-400 mt-1 block">Max retail price</span>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">Max retail price</span>
               </div>
 
               {/* Wholesale / B2B Rate */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Wholesale / B2B Price (₹)
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-2.5 text-indigo-500 font-bold">₹</span>
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-indigo-500 font-bold text-xs">₹</span>
                   <input
                     id="inventory-wholesale-price-input"
                     type="number"
@@ -1536,36 +1536,36 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                     step="0.5"
                     value={wholesalePrice}
                     onChange={(e) => setWholesalePrice(parseFloat(e.target.value) || 0)}
-                    className="w-full pl-7 pr-3 py-2.5 rounded-xl border font-bold text-base bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-indigo-700 dark:text-indigo-400"
+                    className="w-full pl-6 pr-2.5 py-1.5 sm:py-2 rounded-lg border font-bold text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-indigo-700 dark:text-indigo-400"
                   />
                 </div>
-                <span className="text-[10px] text-slate-400 mt-1 block">Schools / Bulk orders</span>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">Schools / Bulk orders</span>
               </div>
             </div>
 
             {/* Profit Margin & Markup Display */}
-            <div className="p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+            <div className="p-2.5 sm:p-3 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200 dark:border-slate-700 grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
               <div>
                 <span className="text-[10px] text-slate-400 font-semibold uppercase block">Profit / Unit</span>
-                <span className={`font-black text-sm ${marginPerUnit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+                <span className={`font-black text-xs sm:text-sm ${marginPerUnit >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                   {formatINR(marginPerUnit)}
                 </span>
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-semibold uppercase block">Gross Margin</span>
-                <span className={`font-black text-sm ${marginPercentage >= 15 ? 'text-emerald-600' : 'text-amber-600'}`}>
+                <span className={`font-black text-xs sm:text-sm ${marginPercentage >= 15 ? 'text-emerald-600' : 'text-amber-600'}`}>
                   {marginPercentage.toFixed(1)}%
                 </span>
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-semibold uppercase block">Markup on Cost</span>
-                <span className="font-black text-sm text-slate-800 dark:text-slate-200">
+                <span className="font-black text-xs sm:text-sm text-slate-800 dark:text-slate-200">
                   {markupPercentage.toFixed(1)}%
                 </span>
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-semibold uppercase block">MRP Discount</span>
-                <span className="font-black text-sm text-teal-600">
+                <span className="font-black text-xs sm:text-sm text-teal-600">
                   {mrp > sellingPrice ? Math.round(((mrp - sellingPrice) / mrp) * 100) : 0}% Off
                 </span>
               </div>
@@ -1573,13 +1573,13 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
           </div>
 
           {/* SECTION 4: SUPPLIERS & WAREHOUSE LOCATION (Super Admin) */}
-          <div className="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4">
-            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-700/60">
-              <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
-                <Warehouse className="w-4 h-4" />
+          <div className="bg-white dark:bg-slate-800 p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-3">
+            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-700/60">
+              <div className="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+                <Warehouse className="w-3.5 h-3.5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                   4. Supplier & Warehouse Location
                 </h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1588,11 +1588,11 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 text-xs">
               {/* Supplier Selection */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="block font-bold text-slate-700 dark:text-slate-300">
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block font-semibold text-slate-700 dark:text-slate-300">
                     Primary Supplier
                   </label>
                   <button
@@ -1608,7 +1608,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   id="inventory-supplier-select"
                   value={supplierId}
                   onChange={(e) => setSupplierId(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs sm:text-sm"
                 >
                   <option value="">-- Select Registered Supplier --</option>
                   {suppliers.map((sup) => (
@@ -1620,7 +1620,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
                 {/* Quick Add Supplier Popup/Form */}
                 {quickAddSupplierOpen && (
-                  <div className="mt-2 p-3 bg-teal-50 dark:bg-teal-950/40 rounded-xl border border-teal-200 dark:border-teal-800 space-y-2">
+                  <div className="mt-2 p-2.5 bg-teal-50 dark:bg-teal-950/40 rounded-lg border border-teal-200 dark:border-teal-800 space-y-2">
                     <p className="text-[11px] font-bold text-teal-900 dark:text-teal-200">
                       Add New Supplier Instantly:
                     </p>
@@ -1629,7 +1629,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                       placeholder="Supplier Name (e.g. JK Paper Distributors)"
                       value={newSupplierName}
                       onChange={(e) => setNewSupplierName(e.target.value)}
-                      className="w-full p-2 rounded-lg border bg-white dark:bg-slate-900 border-slate-200 text-xs"
+                      className="w-full px-2.5 py-1.5 rounded-lg border bg-white dark:bg-slate-900 border-slate-200 text-xs"
                     />
                     <div className="flex gap-2">
                       <input
@@ -1637,12 +1637,12 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                         placeholder="Phone Number"
                         value={newSupplierPhone}
                         onChange={(e) => setNewSupplierPhone(e.target.value)}
-                        className="flex-1 p-2 rounded-lg border bg-white dark:bg-slate-900 border-slate-200 text-xs"
+                        className="flex-1 px-2.5 py-1.5 rounded-lg border bg-white dark:bg-slate-900 border-slate-200 text-xs"
                       />
                       <button
                         type="button"
                         onClick={handleQuickAddSupplier}
-                        className="px-3 py-2 bg-teal-600 text-white rounded-lg font-bold text-xs hover:bg-teal-700"
+                        className="px-2.5 py-1.5 bg-teal-600 text-white rounded-lg font-bold text-xs hover:bg-teal-700"
                       >
                         Add
                       </button>
@@ -1653,7 +1653,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
               {/* Supplier SKU / Ref Code */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Supplier Item Code / Ref
                 </label>
                 <input
@@ -1662,20 +1662,20 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   placeholder="e.g. JK-CAT-A4-75G"
                   value={supplierSku}
                   onChange={(e) => setSupplierSku(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border font-mono bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border font-mono bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs sm:text-sm"
                 />
               </div>
 
               {/* Warehouse Facility */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Warehouse Facility
                 </label>
                 <select
                   id="inventory-warehouse-select"
                   value={warehouse}
                   onChange={(e) => setWarehouse(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium text-xs sm:text-sm"
                 >
                   {WAREHOUSE_LOCATIONS.map((loc) => (
                     <option key={loc} value={loc}>
@@ -1687,7 +1687,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
 
               {/* Storage Rack / Bin / Shelf */}
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Rack / Bin / Shelf Location
                 </label>
                 <input
@@ -1696,20 +1696,20 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   placeholder="e.g. Aisle 2, Rack C, Bin 14"
                   value={warehouseLocation}
                   onChange={(e) => setWarehouseLocation(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs sm:text-sm"
                 />
               </div>
             </div>
           </div>
 
           {/* SECTION 5: INVENTORY HISTORY & INITIAL AUDIT ENTRY (Super Admin) */}
-          <div className="bg-white dark:bg-slate-800 p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4">
-            <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-slate-700/60">
-              <div className="w-7 h-7 rounded-lg bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
-                <History className="w-4 h-4" />
+          <div className="bg-white dark:bg-slate-800 p-3.5 sm:p-4.5 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-3">
+            <div className="flex items-center gap-2 pb-2.5 border-b border-slate-100 dark:border-slate-700/60">
+              <div className="w-6 h-6 rounded-md bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+                <History className="w-3.5 h-3.5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+                <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white">
                   5. Inventory History & Audit Entry
                 </h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -1718,9 +1718,9 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               </div>
             </div>
 
-            <div className="space-y-3 text-xs">
+            <div className="space-y-2.5 text-xs">
               <div>
-                <label className="block font-bold text-slate-700 dark:text-slate-300 mb-1">
+                <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Audit Entry Note (Recorded in permanent ledger)
                 </label>
                 <input
@@ -1728,12 +1728,12 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   type="text"
                   value={initialAuditNote}
                   onChange={(e) => setInitialAuditNote(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs sm:text-sm"
                 />
               </div>
 
               {/* Preview of ledger entry */}
-              <div className="p-3.5 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-1.5 font-mono text-[11px]">
+              <div className="p-2.5 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200 dark:border-slate-700 space-y-1 font-mono text-[11px]">
                 <div className="flex items-center justify-between text-slate-500">
                   <span>Ledger Event:</span>
                   <span className="font-bold text-emerald-600">INITIAL_STOCK_RECORD</span>
@@ -1760,10 +1760,10 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
         </div>
 
         {/* RIGHT 1 COLUMN: LIVE SUMMARY & AUDIT PREVIEW */}
-        <div className="space-y-5">
+        <div className="space-y-3.5 sm:space-y-4">
           {/* Live Summary Card */}
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-4 sticky top-6">
-            <h3 className="font-extrabold text-sm text-slate-900 dark:text-white pb-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+          <div className="bg-white dark:bg-slate-800 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xs space-y-3 sticky top-4">
+            <h3 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white pb-2.5 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
               <span>Inventory Item Summary</span>
               <span className="text-[10px] font-mono font-normal px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
                 {sku || 'PENDING-SKU'}
@@ -1771,8 +1771,8 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
             </h3>
 
             {/* Product card preview */}
-            <div className="flex gap-3 items-center">
-              <div className="w-14 h-14 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0 bg-slate-100">
+            <div className="flex gap-2.5 items-center">
+              <div className="w-12 h-12 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0 bg-slate-100">
                 <img
                   src={imageUrl}
                   alt={name || 'Preview'}
@@ -1787,7 +1787,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                 <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                   {brand || 'Brand'} • {category}
                 </p>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-1.5 mt-0.5">
                   <span className="font-black text-xs text-teal-600">
                     {formatINR(sellingPrice)}
                   </span>
@@ -1799,41 +1799,41 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
             </div>
 
             {/* GST Tax Breakdown */}
-            <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+            <div className="p-2.5 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200 dark:border-slate-700 space-y-1.5 text-xs">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                 GST Tax Calculation:
               </span>
-              <div className="flex justify-between text-slate-600 dark:text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400 text-[11px]">
                 <span>Tax Type:</span>
                 <span className="font-semibold text-slate-800 dark:text-slate-200">{taxType}</span>
               </div>
-              <div className="flex justify-between text-slate-600 dark:text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400 text-[11px]">
                 <span>GST Rate:</span>
                 <span className="font-bold text-teal-600">{gstRate}%</span>
               </div>
-              <div className="flex justify-between text-slate-600 dark:text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400 text-[11px]">
                 <span>Base Taxable Value:</span>
                 <span className="font-mono text-slate-800 dark:text-slate-200">{formatINR(taxableBase)}</span>
               </div>
-              <div className="flex justify-between text-slate-600 dark:text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400 text-[11px]">
                 <span>CGST ({gstRate / 2}%):</span>
                 <span className="font-mono text-slate-700 dark:text-slate-300">{formatINR(cgstAmount)}</span>
               </div>
-              <div className="flex justify-between text-slate-600 dark:text-slate-400">
+              <div className="flex justify-between text-slate-600 dark:text-slate-400 text-[11px]">
                 <span>SGST ({gstRate / 2}%):</span>
                 <span className="font-mono text-slate-700 dark:text-slate-300">{formatINR(sgstAmount)}</span>
               </div>
-              <div className="border-t border-slate-200 dark:border-slate-700 pt-1.5 flex justify-between font-bold text-slate-900 dark:text-white">
+              <div className="border-t border-slate-200 dark:border-slate-700 pt-1 flex justify-between font-bold text-slate-900 dark:text-white text-xs">
                 <span>Total Tax / Unit:</span>
                 <span className="font-mono text-teal-600">{formatINR(gstAmount)}</span>
               </div>
             </div>
 
             {/* Valuation & Capital Allocation */}
-            <div className="p-3 bg-teal-50/60 dark:bg-teal-950/40 rounded-xl border border-teal-200 dark:border-teal-800/60 space-y-1.5 text-xs">
+            <div className="p-2.5 bg-teal-50/60 dark:bg-teal-950/40 rounded-lg border border-teal-200 dark:border-teal-800/60 space-y-1 text-xs">
               <div className="flex justify-between text-teal-900 dark:text-teal-200 font-semibold">
                 <span>Total Inventory Value:</span>
-                <span className="font-black text-sm text-teal-700 dark:text-teal-300">
+                <span className="font-black text-xs sm:text-sm text-teal-700 dark:text-teal-300">
                   {formatINR(openingStock * purchasePrice)}
                 </span>
               </div>
@@ -1847,41 +1847,41 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
             </div>
 
             {/* Super Admin Control Checklist */}
-            <div className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400 pt-1">
+            <div className="space-y-1 text-xs text-slate-600 dark:text-slate-400 pt-0.5">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                 Super Admin Controls:
               </span>
               <div className="flex items-center gap-1.5 text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
                 <span>Stock creation & limits configured</span>
               </div>
               <div className="flex items-center gap-1.5 text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
                 <span>Pricing & wholesale tiers defined</span>
               </div>
               <div className="flex items-center gap-1.5 text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
                 <span>GST ({gstRate}%) & HSN verified</span>
               </div>
               <div className="flex items-center gap-1.5 text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
                 <span>Warehouse bin location assigned</span>
               </div>
               <div className="flex items-center gap-1.5 text-[11px]">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
                 <span>Initial ledger audit log generated</span>
               </div>
             </div>
 
             {/* Bottom Quick Save Buttons */}
-            <div className="pt-2 space-y-2">
+            <div className="pt-1.5 space-y-2">
               <button
                 type="button"
                 onClick={() => handleSave(false)}
                 disabled={isSubmitting}
-                className="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition cursor-pointer"
+                className="w-full min-h-[38px] py-2 px-3 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition cursor-pointer touch-manipulation"
               >
-                <Save className="w-4 h-4" />
+                <Save className="w-3.5 h-3.5" />
                 <span>Save Inventory</span>
               </button>
 
@@ -1890,9 +1890,9 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
                   type="button"
                   onClick={() => handleSave(true)}
                   disabled={isSubmitting}
-                  className="w-full py-2.5 px-4 rounded-xl border border-teal-300 dark:border-teal-700 bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-bold text-xs flex items-center justify-center gap-2 hover:bg-teal-100 transition cursor-pointer"
+                  className="w-full min-h-[38px] py-2 px-3 rounded-lg border border-teal-300 dark:border-teal-700 bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-bold text-xs flex items-center justify-center gap-1.5 hover:bg-teal-100 transition cursor-pointer touch-manipulation"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3.5 h-3.5" />
                   <span>Save & Add Another</span>
                 </button>
               )}
@@ -1900,7 +1900,7 @@ export const AddInventoryView: React.FC<AddInventoryViewProps> = ({
               <button
                 type="button"
                 onClick={onBackToInventory}
-                className="w-full py-2 text-center text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition"
+                className="w-full min-h-[36px] py-1.5 text-center text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition cursor-pointer touch-manipulation flex items-center justify-center"
               >
                 Back to Inventory
               </button>

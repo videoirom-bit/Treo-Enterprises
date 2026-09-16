@@ -145,7 +145,7 @@ export const AboutContactView: React.FC = () => {
 
           <button
             onClick={openWhatsApp}
-            className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md"
+            className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition shadow-md min-h-[44px] cursor-pointer"
           >
             <MessageCircle className="w-4 h-4" />
             <span>Chat Directly on WhatsApp</span>
@@ -184,7 +184,7 @@ export const AboutContactView: React.FC = () => {
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
                     placeholder="e.g. Rajesh Sharma"
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                    className="w-full min-h-[44px] p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
                   />
                 </div>
 
@@ -196,7 +196,7 @@ export const AboutContactView: React.FC = () => {
                     value={contactPhone}
                     onChange={(e) => setContactPhone(e.target.value)}
                     placeholder="10-digit mobile number"
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono"
+                    className="w-full min-h-[44px] p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono"
                   />
                 </div>
               </div>
@@ -209,7 +209,7 @@ export const AboutContactView: React.FC = () => {
                   value={contactSubject}
                   onChange={(e) => setContactSubject(e.target.value)}
                   placeholder="e.g. Bulk quote for 50 reams JK Copier paper"
-                  className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                  className="w-full min-h-[44px] p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
                 />
               </div>
 
@@ -221,13 +221,13 @@ export const AboutContactView: React.FC = () => {
                   value={contactMessage}
                   onChange={(e) => setContactMessage(e.target.value)}
                   placeholder="Please mention quantities, preferred brands (Classmate, Doms, Reynolds), or delivery location..."
-                  className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                  className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 resize-y"
                 />
               </div>
 
               <button
                 type="submit"
-                className="px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-2 shadow-md transition"
+                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition min-h-[44px] cursor-pointer touch-manipulation"
               >
                 <Send className="w-4 h-4" />
                 <span>Submit Inquiry</span>

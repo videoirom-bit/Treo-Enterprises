@@ -32,6 +32,7 @@ export interface ShopSettings {
   accentColor: string;
   stateCode: string; // Indian state GST code (e.g., '22' for Chhattisgarh or '27' for Maharashtra)
   termsAndConditions: string;
+  enableRazorpay?: boolean;
 }
 
 export type UserRole = 'super_admin' | 'admin' | 'sales_staff' | 'inventory_staff' | 'accountant';
@@ -195,7 +196,8 @@ export type PaymentMethod =
   | 'Credit'
   | 'Cash on Delivery'
   | 'Online Payment'
-  | 'Pay at Shop';
+  | 'Pay at Shop'
+  | 'Razorpay';
 
 export type PaymentStatus = 'Paid' | 'Partially Paid' | 'Partial' | 'Pending' | 'COD' | 'Refunded';
 
@@ -219,6 +221,8 @@ export interface PaymentRecord {
   method?: PaymentMethod | string;
   status?: PaymentStatus | string;
   transactionReference?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
   timestamp?: string;
   notes?: string;
 
@@ -305,6 +309,9 @@ export interface Order {
   notificationLog?: OrderNotification[];
   driveFileId?: string;
   driveFileUrl?: string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
+  razorpaySignature?: string;
 }
 
 export interface Supplier {

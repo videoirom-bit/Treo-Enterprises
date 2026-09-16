@@ -379,7 +379,7 @@ export const AdminAuthView: React.FC = () => {
                 id="admin-login-submit-btn"
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full min-h-[44px] py-3 rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer touch-manipulation disabled:opacity-50"
               >
                 <Shield className="w-4 h-4" />
                 <span>{isLoading ? 'Verifying...' : 'Unlock Dashboard'}</span>
@@ -398,7 +398,7 @@ export const AdminAuthView: React.FC = () => {
                 type="button"
                 onClick={handleGoogleSignIn}
                 disabled={isLoading}
-                className="w-full py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition shadow-2xs"
+                className="w-full min-h-[44px] py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs flex items-center justify-center gap-2 transition shadow-2xs cursor-pointer touch-manipulation"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path
@@ -442,7 +442,7 @@ export const AdminAuthView: React.FC = () => {
                   value={signUpName}
                   onChange={(e) => setSignUpName(e.target.value)}
                   placeholder="e.g. Ramesh Sharma"
-                  className="w-full py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  className="w-full min-h-[44px] py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -461,7 +461,7 @@ export const AdminAuthView: React.FC = () => {
                     value={signUpEmail}
                     onChange={(e) => setSignUpEmail(e.target.value)}
                     placeholder="superadmin@treoenterprises.com"
-                    className="w-full py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    className="w-full min-h-[44px] py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -478,7 +478,7 @@ export const AdminAuthView: React.FC = () => {
                     value={signUpPhone}
                     onChange={(e) => setSignUpPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    className="w-full min-h-[44px] py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -492,7 +492,7 @@ export const AdminAuthView: React.FC = () => {
                 id="admin-signup-role"
                 value={signUpRole}
                 onChange={(e) => setSignUpRole(e.target.value as UserRole)}
-                className="w-full py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                className="w-full min-h-[44px] py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none cursor-pointer"
               >
                 <option value="super_admin">Super Admin (Store Owner) — Full Unrestricted Access</option>
                 <option value="admin">Store Manager — Inventory, Orders, Staff & Daily Closing</option>
@@ -517,7 +517,7 @@ export const AdminAuthView: React.FC = () => {
                     value={signUpPin}
                     onChange={(e) => setSignUpPin(e.target.value)}
                     placeholder="e.g. 4321"
-                    className="w-full py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono tracking-widest focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    className="w-full min-h-[44px] py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono tracking-widest focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -535,7 +535,7 @@ export const AdminAuthView: React.FC = () => {
                     value={signUpPassword}
                     onChange={(e) => setSignUpPassword(e.target.value)}
                     placeholder="Min 4 characters"
-                    className="w-full py-2 pl-9 pr-8 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    className="w-full min-h-[44px] py-2 pl-9 pr-8 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
                   />
                   <button
                     type="button"
@@ -561,7 +561,7 @@ export const AdminAuthView: React.FC = () => {
                   value={signUpConfirmPassword}
                   onChange={(e) => setSignUpConfirmPassword(e.target.value)}
                   placeholder="Re-enter password"
-                  className="w-full py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                  className="w-full min-h-[44px] py-2 pl-9 pr-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -570,7 +570,7 @@ export const AdminAuthView: React.FC = () => {
               id="admin-signup-submit-btn"
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-4"
+              className="w-full min-h-[44px] py-3 rounded-xl bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2 cursor-pointer touch-manipulation disabled:opacity-50 mt-4"
             >
               <BadgeCheck className="w-4 h-4" />
               <span>{isLoading ? 'Creating Account...' : 'Register & Access Dashboard'}</span>

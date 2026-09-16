@@ -156,6 +156,7 @@ export const InvoiceView: React.FC = () => {
       <div class="text-right">
         <strong style="text-transform: uppercase; font-size: 10px; color: #64748b;">Payment & Dispatch:</strong>
         <div>Mode: <strong>${order.paymentMethod}</strong> (${order.paymentStatus})</div>
+        ${order.razorpayPaymentId ? `<div style="font-family: monospace; font-size: 10px; color: #4338ca;">Razorpay Ref: <strong>${order.razorpayPaymentId}</strong></div>` : ''}
         <div>Order Type: <strong>${order.orderType}</strong></div>
         <div>Supply: <strong>${order.isInterState ? 'Inter-State (IGST)' : 'Intra-State (CGST+SGST)'}</strong></div>
       </div>
@@ -561,6 +562,11 @@ export const InvoiceView: React.FC = () => {
               Payment & Dispatch Info:
             </span>
             <p>Payment Mode: <strong>{order.paymentMethod}</strong></p>
+            {order.razorpayPaymentId && (
+              <p className="text-[10px] text-indigo-700 font-mono">
+                Razorpay Ref: <strong>{order.razorpayPaymentId}</strong>
+              </p>
+            )}
             <p>
               Payment Status: 
               <span className={`ml-1 font-bold ${order.paymentStatus === 'Paid' ? 'text-emerald-700' : 'text-amber-700'}`}>
@@ -573,8 +579,8 @@ export const InvoiceView: React.FC = () => {
         </div>
 
         {/* Itemized Line Items Table */}
-        <div className="py-4 overflow-x-auto">
-          <table id="invoice-items-table" className="w-full text-left border-collapse">
+        <div className="py-4 overflow-x-auto -mx-2 px-2 sm:mx-0 sm:px-0">
+          <table id="invoice-items-table" className="w-full text-left border-collapse print:min-w-full min-w-[620px]">
             <thead>
               <tr className="bg-slate-100 border-y border-slate-300 text-[11px] font-bold text-slate-800">
                 <th className="py-2 px-2 text-center w-8">#</th>

@@ -123,24 +123,24 @@ export const StaffManagementTab: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
           <button
             type="button"
             onClick={() => setShowCredsModal(true)}
-            className="px-3.5 py-2.5 rounded-xl bg-teal-50 dark:bg-teal-950/70 hover:bg-teal-100 text-teal-700 dark:text-teal-300 font-bold text-xs flex items-center gap-1.5 border border-teal-200 dark:border-teal-800 shadow-xs transition cursor-pointer"
+            className="flex-1 sm:flex-initial min-h-[44px] px-3.5 py-2.5 rounded-xl bg-teal-50 dark:bg-teal-950/70 hover:bg-teal-100 text-teal-700 dark:text-teal-300 font-bold text-xs flex items-center justify-center gap-1.5 border border-teal-200 dark:border-teal-800 shadow-xs transition cursor-pointer"
           >
-            <Key className="w-3.5 h-3.5 text-teal-600" />
-            <span>Super Admin Credentials</span>
+            <Key className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+            <span className="truncate">Super Admin Credentials</span>
           </button>
 
           <button
             id="add-staff-member-btn"
             type="button"
             onClick={() => setIsAddModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition cursor-pointer"
+            className="flex-1 sm:flex-initial min-h-[44px] px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition cursor-pointer"
           >
-            <UserPlus className="w-4 h-4" />
-            <span>Add Staff Member</span>
+            <UserPlus className="w-4 h-4 shrink-0" />
+            <span className="truncate">Add Staff Member</span>
           </button>
         </div>
       </div>
@@ -323,8 +323,8 @@ export const StaffManagementTab: React.FC = () => {
 
       {/* Add Staff Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl p-6 max-w-md w-full space-y-4 border border-slate-200 dark:border-slate-700 shadow-2xl text-xs">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-3xl p-4 sm:p-6 max-w-md w-full space-y-4 border border-slate-200 dark:border-slate-700 shadow-2xl text-xs max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-3">
               <h3 className="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
                 <UserPlus className="w-5 h-5 text-teal-600" />
@@ -346,7 +346,7 @@ export const StaffManagementTab: React.FC = () => {
               </div>
             )}
 
-            <form onSubmit={handleAddSubmit} className="space-y-3">
+            <form onSubmit={handleAddSubmit} className="space-y-3.5 text-xs">
               <div>
                 <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                   Full Name <span className="text-red-500">*</span>
@@ -357,11 +357,11 @@ export const StaffManagementTab: React.FC = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Ramesh Sharma"
-                  className="w-full py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full min-h-[44px] py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     Email <span className="text-red-500">*</span>
@@ -372,7 +372,7 @@ export const StaffManagementTab: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="staff@abc.com"
-                    className="w-full py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="w-full min-h-[44px] py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs"
                   />
                 </div>
                 <div>
@@ -384,7 +384,7 @@ export const StaffManagementTab: React.FC = () => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98765..."
-                    className="w-full py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="w-full min-h-[44px] py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs"
                   />
                 </div>
               </div>
@@ -396,7 +396,7 @@ export const StaffManagementTab: React.FC = () => {
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value as UserRole)}
-                  className="w-full py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                  className="w-full min-h-[44px] py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs cursor-pointer"
                 >
                   <option value="super_admin">Super Admin (Store Owner)</option>
                   <option value="admin">Store Manager</option>
@@ -406,7 +406,7 @@ export const StaffManagementTab: React.FC = () => {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-semibold text-slate-700 dark:text-slate-300 mb-1">
                     4-Digit PIN <span className="text-red-500">*</span>
@@ -418,7 +418,7 @@ export const StaffManagementTab: React.FC = () => {
                     value={pin}
                     onChange={(e) => setPin(e.target.value)}
                     placeholder="e.g. 1234"
-                    className="w-full py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono tracking-widest text-slate-900 dark:text-white"
+                    className="w-full min-h-[44px] py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono tracking-widest text-slate-900 dark:text-white text-xs"
                   />
                 </div>
                 <div>
@@ -430,22 +430,22 @@ export const StaffManagementTab: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="e.g. secret123"
-                    className="w-full py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                    className="w-full min-h-[44px] py-2.5 px-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs"
                   />
                 </div>
               </div>
 
-              <div className="pt-3 flex justify-end gap-2">
+              <div className="pt-3 flex flex-col-reverse sm:flex-row justify-end gap-2.5 sm:gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
-                  className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold"
+                  className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-semibold cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition touch-manipulation"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold"
+                  className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold shadow-xs cursor-pointer transition touch-manipulation"
                 >
                   Save Staff Member
                 </button>

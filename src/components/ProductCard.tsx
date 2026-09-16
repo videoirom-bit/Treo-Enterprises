@@ -131,24 +131,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {/* Action Controls */}
         <div className="space-y-2">
           {/* Quantity Selector */}
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-900 text-xs">
+          <div className="flex items-center justify-between gap-1.5 sm:gap-2">
+            <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900 text-xs shrink-0">
               <button
                 type="button"
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                 disabled={isOutOfStock}
-                className="px-2.5 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 disabled:opacity-50"
+                className="px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 disabled:opacity-50 min-w-[36px] min-h-[44px] text-center flex items-center justify-center font-bold text-sm cursor-pointer touch-manipulation"
+                aria-label="Decrease quantity"
               >
                 -
               </button>
-              <span className="px-2.5 py-1 font-semibold text-slate-800 dark:text-slate-200">
+              <span className="px-2 py-1 font-semibold text-slate-800 dark:text-slate-200 min-w-[20px] text-center">
                 {quantity}
               </span>
               <button
                 type="button"
                 onClick={() => setQuantity((q) => Math.min(product.currentStock, q + 1))}
                 disabled={isOutOfStock || quantity >= product.currentStock}
-                className="px-2.5 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 disabled:opacity-50"
+                className="px-3 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 disabled:opacity-50 min-w-[36px] min-h-[44px] text-center flex items-center justify-center font-bold text-sm cursor-pointer touch-manipulation"
+                aria-label="Increase quantity"
               >
                 +
               </button>
@@ -158,7 +160,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               id={`add-to-cart-btn-${product.id}`}
               onClick={handleAddToCart}
               disabled={isOutOfStock}
-              className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-semibold transition ${
+              className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs font-bold transition truncate min-h-[44px] cursor-pointer touch-manipulation ${
                 addedAnimation
                   ? 'bg-emerald-600 text-white'
                   : 'bg-teal-50 dark:bg-teal-950/70 text-teal-800 dark:text-teal-200 hover:bg-teal-100 dark:hover:bg-teal-900'
@@ -166,13 +168,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             >
               {addedAnimation ? (
                 <>
-                  <Check className="w-3.5 h-3.5" />
-                  <span>Added!</span>
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">Added!</span>
                 </>
               ) : (
                 <>
-                  <ShoppingCart className="w-3.5 h-3.5" />
-                  <span>Add to Cart</span>
+                  <ShoppingCart className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">Add to Cart</span>
                 </>
               )}
             </button>
@@ -183,9 +185,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             id={`buy-now-btn-${product.id}`}
             onClick={handleBuyNow}
             disabled={isOutOfStock}
-            className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-xl bg-slate-900 hover:bg-teal-700 text-white text-xs font-semibold transition disabled:opacity-40 disabled:cursor-not-allowed shadow-xs"
+            className="w-full flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-teal-700 text-white text-xs font-bold transition disabled:opacity-40 disabled:cursor-not-allowed shadow-xs min-h-[44px] cursor-pointer touch-manipulation"
           >
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
+            <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
             <span>Buy Now</span>
           </button>
         </div>

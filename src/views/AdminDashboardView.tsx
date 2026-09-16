@@ -310,13 +310,41 @@ export const AdminDashboardView: React.FC = () => {
   const [isResettingShopSettings, setIsResettingShopSettings] = useState(false);
   const [isRefreshingShopSettings, setIsRefreshingShopSettings] = useState(false);
   const [shopSettingsNotice, setShopSettingsNotice] = useState<string | null>(null);
-  const [activeSettingsSection, setActiveSettingsSection] = useState<'all' | 'identity' | 'contact' | 'tax' | 'bank' | 'invoicing'>('all');
+  const [activeSettingsSection, setActiveSettingsSection] = useState<'all' | 'identity' | 'contact' | 'tax' | 'bank' | 'razorpay' | 'invoicing'>('all');
+  const [razorpayGatewayStatus, setRazorpayGatewayStatus] = useState<any>(null);
+  const [isTestingGateway, setIsTestingGateway] = useState(false);
+
+  const checkRazorpayGatewayStatus = async () => {
+    setIsTestingGateway(true);
+    try {
+      const res = await fetch('/api/payment/razorpay/config');
+      const data = await res.json();
+      setRazorpayGatewayStatus(data);
+      if (data.isConfigured) {
+        showToast(`Razorpay Gateway Active (${data.mode.toUpperCase()} mode). Key: ${data.keyId}`);
+      } else {
+        showToast('Razorpay Gateway running in Sandbox Test Simulator.');
+      }
+    } catch (err: any) {
+      setRazorpayGatewayStatus({ isConfigured: false, error: err.message });
+      showToast('Could not reach Razorpay backend server.');
+    } finally {
+      setIsTestingGateway(false);
+    }
+  };
 
   useEffect(() => {
     if (shopSettings) {
       setSettingsForm(getNormalizedShopForm(shopSettings));
     }
   }, [shopSettings]);
+
+  useEffect(() => {
+    fetch('/api/payment/razorpay/config')
+      .then((res) => res.json())
+      .then((data) => setRazorpayGatewayStatus(data))
+      .catch(() => {});
+  }, []);
 
   // New Expense form
   const [expenseTitle, setExpenseTitle] = useState('');
@@ -1058,13 +1086,13 @@ export const AdminDashboardView: React.FC = () => {
           </div>
 
           {/* Primary Key Metric Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 min-[440px]:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {/* Today's Sales */}
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs">
+            <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs">
               <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block">
                 Today's Sales
               </span>
-              <span className="text-2xl font-black text-slate-900 dark:text-white mt-1 block">
+              <span className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white mt-1 block">
                 {formatINR(todaySales)}
               </span>
               <span className="text-[11px] text-emerald-600 font-semibold mt-2 block">
@@ -1073,7 +1101,7 @@ export const AdminDashboardView: React.FC = () => {
             </div>
 
             {/* Period Revenue */}
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs">
+            <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs">
               <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block">
                 {analyticsPeriod === 'today'
                   ? 'Revenue (Today)'
@@ -1083,7 +1111,7 @@ export const AdminDashboardView: React.FC = () => {
                   ? 'Revenue (Last 30 Days)'
                   : 'Total Revenue'}
               </span>
-              <span className="text-2xl font-black text-teal-600 dark:text-teal-400 mt-1 block">
+              <span className="text-xl sm:text-2xl font-black text-teal-600 dark:text-teal-400 mt-1 block">
                 {formatINR(periodRevenue)}
               </span>
               <span className="text-[11px] text-slate-500 font-semibold mt-2 block">
@@ -1092,11 +1120,11 @@ export const AdminDashboardView: React.FC = () => {
             </div>
 
             {/* Net Profit Estimate */}
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs">
+            <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs">
               <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block">
                 Estimated Net Profit
               </span>
-              <span className={`text-2xl font-black mt-1 block ${periodNetProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
+              <span className={`text-xl sm:text-2xl font-black mt-1 block ${periodNetProfit >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                 {formatINR(periodNetProfit)}
               </span>
               <span className="text-[11px] text-slate-400 mt-2 block truncate">
@@ -1105,11 +1133,11 @@ export const AdminDashboardView: React.FC = () => {
             </div>
 
             {/* Pending Payments */}
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs">
+            <div className="p-3.5 sm:p-5 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-xs">
               <span className="text-xs text-slate-500 font-semibold uppercase tracking-wider block">
                 Pending Order Payments
               </span>
-              <span className="text-2xl font-black text-amber-600 dark:text-amber-400 mt-1 block">
+              <span className="text-xl sm:text-2xl font-black text-amber-600 dark:text-amber-400 mt-1 block">
                 {formatINR(pendingPaymentsAmount)}
               </span>
               <span className="text-[11px] text-slate-400 mt-2 block truncate">
@@ -1373,8 +1401,8 @@ export const AdminDashboardView: React.FC = () => {
               </button>
             </div>
 
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
+            <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+              <table className="w-full text-left text-xs min-w-[640px]">
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-slate-700 text-slate-500 font-semibold">
                     <th className="py-2.5 px-3">Invoice No</th>
@@ -2675,7 +2703,7 @@ export const AdminDashboardView: React.FC = () => {
               </div>
 
               {/* MODAL FOOTER */}
-              <div className="flex items-center justify-end gap-3 pt-5 border-t border-slate-100 dark:border-slate-700">
+              <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 sm:gap-3 pt-4 sm:pt-5 border-t border-slate-100 dark:border-slate-700">
                 <button
                   type="button"
                   id="cancel-product-btn"
@@ -2685,7 +2713,7 @@ export const AdminDashboardView: React.FC = () => {
                     setEditingProduct(null);
                     setProductFormError(null);
                   }}
-                  className="px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold transition hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 cursor-pointer"
+                  className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold transition hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 cursor-pointer touch-manipulation text-center flex items-center justify-center"
                 >
                   Cancel
                 </button>
@@ -2693,7 +2721,7 @@ export const AdminDashboardView: React.FC = () => {
                   type="submit"
                   id="save-product-btn"
                   disabled={isSavingProduct}
-                  className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-extrabold shadow-md transition flex items-center gap-2 disabled:opacity-60 cursor-pointer"
+                  className="w-full sm:w-auto min-h-[44px] px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 active:bg-teal-800 text-white font-extrabold shadow-md transition flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer touch-manipulation text-center"
                 >
                   {isSavingProduct ? (
                     <>
@@ -2852,7 +2880,7 @@ export const AdminDashboardView: React.FC = () => {
 
           {/* Orders Table */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[850px]">
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 text-slate-500 font-bold">
                   <th className="py-3 px-3">Order & Invoice</th>
@@ -3137,7 +3165,7 @@ export const AdminDashboardView: React.FC = () => {
                       vehicleDetails: vehicle,
                     });
                   }}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                  className="w-full min-h-[44px] p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs cursor-pointer"
                 >
                   <option value="Ramesh Sahu">Ramesh Sahu (Civil Lines / Pandri)</option>
                   <option value="Suresh Kumar">Suresh Kumar (Shankar Nagar / Telibandha)</option>
@@ -3155,7 +3183,7 @@ export const AdminDashboardView: React.FC = () => {
                   value={riderForm.mobile}
                   onChange={(e) => setRiderForm({ ...riderForm, mobile: e.target.value })}
                   required
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                  className="w-full min-h-[44px] p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs"
                 />
               </div>
 
@@ -3168,7 +3196,7 @@ export const AdminDashboardView: React.FC = () => {
                   value={riderForm.deliveryArea}
                   onChange={(e) => setRiderForm({ ...riderForm, deliveryArea: e.target.value })}
                   required
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                  className="w-full min-h-[44px] p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs"
                 />
               </div>
 
@@ -3180,21 +3208,21 @@ export const AdminDashboardView: React.FC = () => {
                   type="text"
                   value={riderForm.vehicleDetails}
                   onChange={(e) => setRiderForm({ ...riderForm, vehicleDetails: e.target.value })}
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                  className="w-full min-h-[44px] p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 sm:gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setAssignRiderOrder(null)}
-                  className="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
+                  className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition cursor-pointer touch-manipulation text-center"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-sm"
+                  className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-xs transition cursor-pointer touch-manipulation text-center"
                 >
                   Confirm Assignment
                 </button>
@@ -3262,10 +3290,10 @@ export const AdminDashboardView: React.FC = () => {
                       key={ch}
                       type="button"
                       onClick={() => setNotificationChannel(ch)}
-                      className={`py-2 rounded-xl border text-xs font-bold transition ${
+                      className={`min-h-[44px] py-2 px-1 rounded-xl border text-xs font-bold transition flex items-center justify-center cursor-pointer touch-manipulation ${
                         notificationChannel === ch
                           ? 'bg-emerald-50 dark:bg-emerald-950 border-emerald-500 text-emerald-700 dark:text-emerald-300'
-                          : 'border-slate-200 dark:border-slate-700 text-slate-600 hover:bg-slate-50'
+                          : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
                       }`}
                     >
                       {ch}
@@ -3283,21 +3311,21 @@ export const AdminDashboardView: React.FC = () => {
                   value={notificationMessage}
                   onChange={(e) => setNotificationMessage(e.target.value)}
                   required
-                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                  className="w-full p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white text-xs"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 sm:gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setNotificationModalOrder(null)}
-                  className="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 text-xs font-bold"
+                  className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 text-xs font-bold transition cursor-pointer touch-manipulation text-center"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-sm flex items-center gap-1.5"
+                  className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xs flex items-center justify-center gap-1.5 transition cursor-pointer touch-manipulation text-center"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>Send Notification</span>
@@ -3312,7 +3340,7 @@ export const AdminDashboardView: React.FC = () => {
       {activeTab === 'customers' && (
         <div className="space-y-4">
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[700px]">
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 text-slate-500 font-bold">
                   <th className="py-3 px-3">Customer Name</th>
@@ -3366,7 +3394,7 @@ export const AdminDashboardView: React.FC = () => {
       {activeTab === 'suppliers' && (
         <div className="space-y-4">
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-x-auto shadow-xs">
-            <table className="w-full text-left text-xs">
+            <table className="w-full text-left text-xs min-w-[700px]">
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 text-slate-500 font-bold">
                   <th className="py-3 px-3">Supplier / Mill</th>
@@ -3456,7 +3484,7 @@ export const AdminDashboardView: React.FC = () => {
                   placeholder="e.g. Courier charges for paper delivery"
                   value={expenseTitle}
                   onChange={(e) => setExpenseTitle(e.target.value)}
-                  className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                  className="w-full min-h-[44px] p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs"
                 />
               </div>
 
@@ -3466,7 +3494,7 @@ export const AdminDashboardView: React.FC = () => {
                   <select
                     value={expenseCategory}
                     onChange={(e: any) => setExpenseCategory(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                    className="w-full min-h-[44px] p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs cursor-pointer"
                   >
                     {['Tea & Snacks', 'Rent', 'Electricity', 'Salary', 'Packaging', 'Transport', 'Other'].map(
                       (c) => (
@@ -3485,14 +3513,14 @@ export const AdminDashboardView: React.FC = () => {
                     required
                     value={expenseAmount}
                     onChange={(e) => setExpenseAmount(e.target.value)}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-bold"
+                    className="w-full min-h-[44px] p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-bold text-slate-900 dark:text-white text-xs"
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold transition"
+                className="w-full min-h-[44px] py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold transition cursor-pointer touch-manipulation text-center flex items-center justify-center"
               >
                 Add Expense
               </button>
@@ -3662,7 +3690,7 @@ export const AdminDashboardView: React.FC = () => {
                     value={dailyPhysicalCash || (expectedCash > 0 ? expectedCash : '')}
                     onChange={(e) => setDailyPhysicalCash(e.target.value)}
                     placeholder={`Expected: ₹${expectedCash}`}
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-bold font-mono"
+                    className="w-full min-h-[44px] p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-bold font-mono text-slate-900 dark:text-white text-xs"
                   />
                   <span className="text-[11px] text-slate-400 mt-1 block">
                     Expected cash: {formatINR(expectedCash)} • Difference:{' '}
@@ -3687,7 +3715,7 @@ export const AdminDashboardView: React.FC = () => {
                     value={dailyNotes}
                     onChange={(e) => setDailyNotes(e.target.value)}
                     placeholder="Physical cash verified against counter receipts, notes on shift handover..."
-                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                    className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs"
                   />
                 </div>
               </div>
@@ -3714,7 +3742,7 @@ export const AdminDashboardView: React.FC = () => {
                     net_sales: autoNetSales,
                   });
                 }}
-                className="w-full sm:w-auto px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold transition shadow-xs text-center cursor-pointer"
+                className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold transition shadow-xs text-center cursor-pointer touch-manipulation flex items-center justify-center"
               >
                 Save & Finalize Today's Register to Supabase
               </button>
@@ -3751,7 +3779,7 @@ export const AdminDashboardView: React.FC = () => {
                     .join('\n');
                   handleExportDriveReport('GSTR1_Sales_Register', csvHeaders + csvRows);
                 }}
-                className="w-full sm:w-auto justify-center px-4 py-2.5 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition"
+                className="w-full sm:w-auto min-h-[44px] justify-center px-4 py-2.5 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition cursor-pointer touch-manipulation"
               >
                 <CloudUpload className="w-4 h-4 shrink-0" />
                 <span>Save GSTR-1 Report to Google Drive</span>
@@ -3896,6 +3924,7 @@ export const AdminDashboardView: React.FC = () => {
               { id: 'contact', label: 'Contact & Timings', icon: Phone },
               { id: 'tax', label: 'Location & GST Profile', icon: Building },
               { id: 'bank', label: 'Bank & UPI Payments', icon: CreditCard },
+              { id: 'razorpay', label: 'Razorpay Gateway', icon: Shield },
               { id: 'invoicing', label: 'Invoicing & Terms', icon: Receipt },
             ].map((tab) => {
               const Icon = tab.icon;
@@ -4003,46 +4032,46 @@ export const AdminDashboardView: React.FC = () => {
                 setIsSavingShopSettings(false);
               }
             }}
-            className="space-y-6 text-xs"
+            className="space-y-3.5 sm:space-y-4 text-xs"
           >
             {/* SECTION 1: STORE IDENTITY & BRANDING */}
             {(activeSettingsSection === 'all' || activeSettingsSection === 'identity') && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 space-y-4 shadow-xs">
-                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3">
-                  <Palette className="w-4 h-4 text-teal-600" />
-                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
+              <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 p-3.5 sm:p-4.5 space-y-3 shadow-xs">
+                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-2.5">
+                  <Palette className="w-3.5 h-3.5 text-teal-600" />
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white">
                     1. Store Identity & Visual Branding
                   </h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
                   <div>
-                    <label className="block font-semibold mb-1">Shop Name *</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Shop Name *</label>
                     <input
                       type="text"
                       required
                       value={settingsForm.shopName}
                       onChange={(e) => setSettingsForm({ ...settingsForm, shopName: e.target.value })}
                       placeholder="e.g. ABC Paper & Stationery"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-bold"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-bold text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Tagline / Slogan</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Tagline / Slogan</label>
                     <input
                       type="text"
                       value={settingsForm.tagline}
                       onChange={(e) => setSettingsForm({ ...settingsForm, tagline: e.target.value })}
                       placeholder="e.g. Order Tracking, GST Invoicing & Premium Stationery"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Website Name / Domain</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Website Name / Domain</label>
                     <div className="flex">
-                      <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-500">
+                      <span className="inline-flex items-center px-2.5 rounded-l-lg border border-r-0 border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs">
                         https://
                       </span>
                       <input
@@ -4050,37 +4079,37 @@ export const AdminDashboardView: React.FC = () => {
                         value={settingsForm.websiteName}
                         onChange={(e) => setSettingsForm({ ...settingsForm, websiteName: e.target.value })}
                         placeholder="abcpapers.com"
-                        className="w-full p-2.5 rounded-r-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono"
+                        className="w-full px-2.5 py-1.5 sm:py-2 rounded-r-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-white"
                       />
                     </div>
                   </div>
 
                   {/* Logo URL with Presets */}
                   <div className="sm:col-span-2 lg:col-span-3">
-                    <label className="block font-semibold mb-1">Shop Logo URL</label>
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Shop Logo URL</label>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2.5">
                       <img
                         src={settingsForm.shopLogo || PRESET_LOGOS[0].url}
                         alt="Logo preview"
-                        className="w-12 h-12 rounded-xl object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                        className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shrink-0"
                       />
                       <input
                         type="url"
                         value={settingsForm.shopLogo}
                         onChange={(e) => setSettingsForm({ ...settingsForm, shopLogo: e.target.value })}
                         placeholder="https://..."
-                        className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs"
+                        className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs text-slate-900 dark:text-white"
                       />
                     </div>
 
-                    <div className="flex items-center gap-2 mt-2 flex-wrap">
-                      <span className="text-[11px] text-slate-500 font-medium">Quick logo presets:</span>
+                    <div className="flex items-center gap-1.5 mt-2 flex-wrap">
+                      <span className="text-[10px] text-slate-500 font-medium">Quick logo presets:</span>
                       {PRESET_LOGOS.map((preset) => (
                         <button
                           key={preset.label}
                           type="button"
                           onClick={() => setSettingsForm({ ...settingsForm, shopLogo: preset.url })}
-                          className={`px-2 py-1 rounded-lg text-[11px] border transition cursor-pointer flex items-center gap-1 ${
+                          className={`px-2 py-0.5 rounded-md text-[11px] border transition cursor-pointer flex items-center gap-1 ${
                             settingsForm.shopLogo === preset.url
                               ? 'bg-teal-50 border-teal-500 text-teal-800 dark:bg-teal-950 dark:text-teal-200 font-bold'
                               : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
@@ -4094,48 +4123,48 @@ export const AdminDashboardView: React.FC = () => {
                   </div>
 
                   {/* Colors & Themes */}
-                  <div className="sm:col-span-2 lg:col-span-3 pt-2">
-                    <label className="block font-semibold mb-1.5">Brand Theme Colors</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="sm:col-span-2 lg:col-span-3 pt-1">
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Brand Theme Colors</label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <span className="text-[11px] text-slate-500 block mb-1">Primary Color (Header / Invoices)</span>
+                        <span className="text-[10px] text-slate-500 block mb-1">Primary Color (Header / Invoices)</span>
                         <div className="flex items-center gap-2">
                           <input
                             type="color"
                             value={settingsForm.primaryBrandColor || '#0f766e'}
                             onChange={(e) => setSettingsForm({ ...settingsForm, primaryBrandColor: e.target.value })}
-                            className="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer p-0.5 bg-white dark:bg-slate-800"
+                            className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer p-0.5 bg-white dark:bg-slate-800 shrink-0"
                           />
                           <input
                             type="text"
                             value={settingsForm.primaryBrandColor || '#0f766e'}
                             onChange={(e) => setSettingsForm({ ...settingsForm, primaryBrandColor: e.target.value })}
-                            className="w-32 p-2 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs uppercase"
+                            className="w-28 px-2 py-1.5 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs uppercase text-slate-900 dark:text-white"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <span className="text-[11px] text-slate-500 block mb-1">Accent Color (Badges / Highlights)</span>
+                        <span className="text-[10px] text-slate-500 block mb-1">Accent Color (Badges / Highlights)</span>
                         <div className="flex items-center gap-2">
                           <input
                             type="color"
                             value={settingsForm.accentColor || '#f59e0b'}
                             onChange={(e) => setSettingsForm({ ...settingsForm, accentColor: e.target.value })}
-                            className="w-10 h-10 rounded-xl border border-slate-200 dark:border-slate-700 cursor-pointer p-0.5 bg-white dark:bg-slate-800"
+                            className="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer p-0.5 bg-white dark:bg-slate-800 shrink-0"
                           />
                           <input
                             type="text"
                             value={settingsForm.accentColor || '#f59e0b'}
                             onChange={(e) => setSettingsForm({ ...settingsForm, accentColor: e.target.value })}
-                            className="w-32 p-2 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs uppercase"
+                            className="w-28 px-2 py-1.5 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs uppercase text-slate-900 dark:text-white"
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 mt-3 flex-wrap">
-                      <span className="text-[11px] text-slate-500 font-medium">Theme presets:</span>
+                    <div className="flex items-center gap-1.5 mt-2.5 flex-wrap">
+                      <span className="text-[10px] text-slate-500 font-medium">Theme presets:</span>
                       {PRESET_THEMES.map((theme) => (
                         <button
                           key={theme.name}
@@ -4147,10 +4176,10 @@ export const AdminDashboardView: React.FC = () => {
                               accentColor: theme.accent,
                             })
                           }
-                          className="px-2.5 py-1 rounded-lg text-[11px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center gap-1.5 cursor-pointer transition"
+                          className="px-2 py-0.5 rounded-md text-[11px] border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center gap-1 cursor-pointer transition"
                         >
                           <span
-                            className="w-3 h-3 rounded-full border border-black/20 shrink-0"
+                            className="w-2.5 h-2.5 rounded-full border border-black/20 shrink-0"
                             style={{ backgroundColor: theme.primary }}
                           />
                           <span>{theme.name}</span>
@@ -4164,70 +4193,70 @@ export const AdminDashboardView: React.FC = () => {
 
             {/* SECTION 2: CONTACT & OPERATING DETAILS */}
             {(activeSettingsSection === 'all' || activeSettingsSection === 'contact') && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 space-y-4 shadow-xs">
-                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3">
-                  <Phone className="w-4 h-4 text-teal-600" />
-                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
+              <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 p-3.5 sm:p-4.5 space-y-3 shadow-xs">
+                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-2.5">
+                  <Phone className="w-3.5 h-3.5 text-teal-600" />
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white">
                     2. Owner, Communication & Working Hours
                   </h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
                   <div>
-                    <label className="block font-semibold mb-1">Owner / Proprietor Name</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Owner / Proprietor Name</label>
                     <input
                       type="text"
                       value={settingsForm.ownerName}
                       onChange={(e) => setSettingsForm({ ...settingsForm, ownerName: e.target.value })}
                       placeholder="e.g. Mr. Anand Agrawal"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Shop Phone Number *</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Shop Phone Number *</label>
                     <input
                       type="tel"
                       required
                       value={settingsForm.phoneNumber}
                       onChange={(e) => setSettingsForm({ ...settingsForm, phoneNumber: e.target.value })}
                       placeholder="+91 98271 23456"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">WhatsApp Business Number *</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">WhatsApp Business Number *</label>
                     <input
                       type="tel"
                       required
                       value={settingsForm.whatsAppNumber}
                       onChange={(e) => setSettingsForm({ ...settingsForm, whatsAppNumber: e.target.value })}
                       placeholder="+91 98271 23456"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">Used for one-click order placement & updates</span>
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">Used for one-click order placement & updates</span>
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Email Address</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Email Address</label>
                     <input
                       type="email"
                       value={settingsForm.emailAddress}
                       onChange={(e) => setSettingsForm({ ...settingsForm, emailAddress: e.target.value })}
                       placeholder="contact@abcpapers.com"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block font-semibold mb-1">Opening & Support Hours</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Opening & Support Hours</label>
                     <input
                       type="text"
                       value={settingsForm.openingHours}
                       onChange={(e) => setSettingsForm({ ...settingsForm, openingHours: e.target.value })}
                       placeholder="Mon - Sat: 9:00 AM – 9:30 PM | Sunday: 10:00 AM – 2:00 PM"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
                 </div>
@@ -4236,39 +4265,39 @@ export const AdminDashboardView: React.FC = () => {
 
             {/* SECTION 3: LOCATION & GST PROFILE */}
             {(activeSettingsSection === 'all' || activeSettingsSection === 'tax') && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 space-y-4 shadow-xs">
-                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3">
-                  <Building className="w-4 h-4 text-teal-600" />
-                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
+              <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 p-3.5 sm:p-4.5 space-y-3 shadow-xs">
+                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-2.5">
+                  <Building className="w-3.5 h-3.5 text-teal-600" />
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white">
                     3. Store Address, GSTIN & Tax Compliance Profile
                   </h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
                   <div className="sm:col-span-2">
-                    <label className="block font-semibold mb-1">Shop Address (Physical Store)</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Shop Address (Physical Store)</label>
                     <input
                       type="text"
                       value={settingsForm.shopAddress}
                       onChange={(e) => setSettingsForm({ ...settingsForm, shopAddress: e.target.value })}
                       placeholder="Shop No. 12-14, Ground Floor, Sharda Complex, Pandri Market"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">City</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">City</label>
                     <input
                       type="text"
                       value={settingsForm.city}
                       onChange={(e) => setSettingsForm({ ...settingsForm, city: e.target.value })}
                       placeholder="Raipur"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">State (GST Home State) *</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">State (GST Home State) *</label>
                     <div className="space-y-1">
                       <select
                         value={INDIAN_STATES_GST.find((s) => s.name.toLowerCase() === settingsForm.state.toLowerCase())?.code || ''}
@@ -4282,7 +4311,7 @@ export const AdminDashboardView: React.FC = () => {
                             });
                           }
                         }}
-                        className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-semibold"
+                        className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-semibold text-xs sm:text-sm text-slate-900 dark:text-white"
                       >
                         <option value="">Select Indian State (Auto-syncs GST code)</option>
                         {INDIAN_STATES_GST.map((item) => (
@@ -4296,37 +4325,37 @@ export const AdminDashboardView: React.FC = () => {
                         value={settingsForm.state}
                         onChange={(e) => setSettingsForm({ ...settingsForm, state: e.target.value })}
                         placeholder="State name"
-                        className="w-full p-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs"
+                        className="w-full px-2.5 py-1 sm:py-1.5 rounded-md border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">PIN Code</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">PIN Code</label>
                     <input
                       type="text"
                       value={settingsForm.pinCode}
                       onChange={(e) => setSettingsForm({ ...settingsForm, pinCode: e.target.value })}
                       placeholder="492004"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">GST State Code (2-Digit)</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">GST State Code (2-Digit)</label>
                     <input
                       type="text"
                       maxLength={2}
                       value={settingsForm.stateCode}
                       onChange={(e) => setSettingsForm({ ...settingsForm, stateCode: e.target.value })}
                       placeholder="22"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono font-bold"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono font-bold text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">Determines CGST+SGST vs IGST calculation</span>
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">Determines CGST+SGST vs IGST calculation</span>
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Shop GSTIN (15 Characters) *</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Shop GSTIN (15 Characters) *</label>
                     <input
                       type="text"
                       required
@@ -4334,31 +4363,31 @@ export const AdminDashboardView: React.FC = () => {
                       value={settingsForm.gstin}
                       onChange={(e) => setSettingsForm({ ...settingsForm, gstin: e.target.value.toUpperCase() })}
                       placeholder="22AABCA1234F1Z9"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono uppercase font-bold"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono uppercase font-bold text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">Printed on all Tax Invoices & customer bills</span>
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">Printed on all Tax Invoices & customer bills</span>
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">PAN Number (10 Characters)</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">PAN Number (10 Characters)</label>
                     <input
                       type="text"
                       maxLength={10}
                       value={settingsForm.panNumber}
                       onChange={(e) => setSettingsForm({ ...settingsForm, panNumber: e.target.value.toUpperCase() })}
                       placeholder="AABCA1234F"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono uppercase"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono uppercase text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Business Registration / UDYAM</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Business Registration / UDYAM</label>
                     <input
                       type="text"
                       value={settingsForm.businessRegistrationNumber}
                       onChange={(e) => setSettingsForm({ ...settingsForm, businessRegistrationNumber: e.target.value })}
                       placeholder="UDYAM-CG-03-0012345"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
                 </div>
@@ -4367,38 +4396,38 @@ export const AdminDashboardView: React.FC = () => {
 
             {/* SECTION 4: BANK & UPI QR PAYMENT SETUP */}
             {(activeSettingsSection === 'all' || activeSettingsSection === 'bank') && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 space-y-4 shadow-xs">
-                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3">
-                  <CreditCard className="w-4 h-4 text-teal-600" />
-                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
+              <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 p-3.5 sm:p-4.5 space-y-3 shadow-xs">
+                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-2.5">
+                  <CreditCard className="w-3.5 h-3.5 text-teal-600" />
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white">
                     4. Direct UPI QR & Bank Settlement Account
                   </h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
                   <div className="sm:col-span-2 lg:col-span-3">
-                    <label className="block font-semibold mb-1">Shop UPI ID (For Direct Scan-to-Pay QR)</label>
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-xl bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300">
-                        <QrCode className="w-5 h-5" />
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Shop UPI ID (For Direct Scan-to-Pay QR)</label>
+                    <div className="flex items-center gap-2.5">
+                      <div className="p-1.5 rounded-lg bg-teal-50 dark:bg-teal-950/60 border border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300 shrink-0">
+                        <QrCode className="w-4 h-4" />
                       </div>
                       <input
                         type="text"
                         value={settingsForm.upiId}
                         onChange={(e) => setSettingsForm({ ...settingsForm, upiId: e.target.value })}
                         placeholder="e.g. abcpaper@okhdfcbank"
-                        className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono font-bold"
+                        className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono font-bold text-xs sm:text-sm text-slate-900 dark:text-white"
                       />
                     </div>
                     {settingsForm.upiId && (
-                      <p className="text-[11px] text-teal-600 dark:text-teal-400 mt-1 font-mono">
+                      <p className="text-[10px] text-teal-600 dark:text-teal-400 mt-0.5 font-mono">
                         UPI QR Link: upi://pay?pa={settingsForm.upiId}&pn={encodeURIComponent(settingsForm.shopName || 'Store')}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Bank Name</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Bank Name</label>
                     <input
                       type="text"
                       value={settingsForm.bankName || settingsForm.bankDetails?.bankName || ''}
@@ -4417,12 +4446,12 @@ export const AdminDashboardView: React.FC = () => {
                         });
                       }}
                       placeholder="e.g. HDFC Bank Ltd"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Bank Account Number</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Bank Account Number</label>
                     <input
                       type="text"
                       value={settingsForm.bankAccountNumber || settingsForm.bankDetails?.accountNumber || ''}
@@ -4441,12 +4470,12 @@ export const AdminDashboardView: React.FC = () => {
                         });
                       }}
                       placeholder="50200012345678"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">IFSC Code (11 Characters)</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">IFSC Code (11 Characters)</label>
                     <input
                       type="text"
                       maxLength={11}
@@ -4466,12 +4495,12 @@ export const AdminDashboardView: React.FC = () => {
                         });
                       }}
                       placeholder="HDFC0001234"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono uppercase font-bold"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono uppercase font-bold text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div className="sm:col-span-2 lg:col-span-3">
-                    <label className="block font-semibold mb-1">Bank Branch Location</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Bank Branch Location</label>
                     <input
                       type="text"
                       value={settingsForm.bankBranch || settingsForm.bankDetails?.branch || ''}
@@ -4490,8 +4519,137 @@ export const AdminDashboardView: React.FC = () => {
                         });
                       }}
                       placeholder="Main Station Road Branch, Raipur"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SECTION 4B: RAZORPAY PAYMENT GATEWAY CONFIGURATION */}
+            {(activeSettingsSection === 'all' || activeSettingsSection === 'razorpay' || activeSettingsSection === 'bank') && (
+              <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-indigo-200 dark:border-indigo-900/60 p-3.5 sm:p-5 space-y-4 shadow-xs">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-indigo-100 dark:border-indigo-900/40 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-xs shrink-0">
+                      ₹
+                    </div>
+                    <div>
+                      <h4 className="font-black text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
+                        <span>1. Razorpay UPI & Gateway Setup</span>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                          Primary UPI Setup
+                        </span>
+                      </h4>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        Zero-wait UPI payments (GPay, PhonePe, Paytm, BHIM QR) + Debit/Credit Cards & NetBanking
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={checkRazorpayGatewayStatus}
+                      disabled={isTestingGateway}
+                      className="px-3 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 text-indigo-700 dark:text-indigo-300 font-semibold text-xs flex items-center gap-1.5 transition cursor-pointer"
+                    >
+                      <RotateCw className={`w-3.5 h-3.5 ${isTestingGateway ? 'animate-spin' : ''}`} />
+                      <span>{isTestingGateway ? 'Testing...' : 'Test Gateway Status'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Gateway Toggle Switch */}
+                <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 flex items-center justify-between gap-4">
+                  <div>
+                    <label htmlFor="toggle-razorpay-enabled" className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white block cursor-pointer">
+                      Enable Razorpay Gateway at Checkout
+                    </label>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                      When enabled, customers can pay directly on the store using Razorpay Standard Checkout
+                    </span>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input
+                      id="toggle-razorpay-enabled"
+                      type="checkbox"
+                      checked={settingsForm.enableRazorpay !== false}
+                      onChange={(e) => setSettingsForm({ ...settingsForm, enableRazorpay: e.target.checked })}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-slate-300 peer-focus:outline-hidden rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-slate-600 peer-checked:bg-indigo-600"></div>
+                  </label>
+                </div>
+
+                {/* Status Indicator & Environment Variable Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                  <div className="p-3.5 rounded-xl bg-linear-to-br from-slate-50 to-indigo-50/30 dark:from-slate-900 dark:to-indigo-950/20 border border-slate-200 dark:border-slate-700 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-slate-700 dark:text-slate-300">Gateway Backend Mode</span>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                        razorpayGatewayStatus?.isConfigured
+                          ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-200 border border-emerald-300'
+                          : 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-200 border border-amber-300'
+                      }`}>
+                        {razorpayGatewayStatus?.isConfigured
+                          ? `Active (${razorpayGatewayStatus.mode.toUpperCase()})`
+                          : 'Sandbox Test Mode Active'}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1 text-[11px] font-mono">
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                        <span>RAZORPAY_KEY_ID:</span>
+                        <span className="font-bold text-slate-900 dark:text-white">
+                          {razorpayGatewayStatus?.keyId ? `${razorpayGatewayStatus.keyId.slice(0, 8)}...` : 'Using Sandbox Simulator'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                        <span>RAZORPAY_KEY_SECRET:</span>
+                        <span className="font-bold text-slate-900 dark:text-white">
+                          {razorpayGatewayStatus?.isConfigured ? '•••••••••••• (Secured on Server)' : 'Sandbox Verification Active'}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-slate-600 dark:text-slate-400">
+                        <span>Webhook Route:</span>
+                        <span className="text-indigo-600 dark:text-indigo-400">/api/payment/razorpay/webhook</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Setup instructions box */}
+                  <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+                    <span className="font-bold text-slate-800 dark:text-slate-200 block">
+                      How to configure your live or test keys:
+                    </span>
+                    <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-600 dark:text-slate-400">
+                      <li>Log in to your Razorpay Dashboard at <strong>dashboard.razorpay.com</strong>.</li>
+                      <li>Navigate to <strong>Account & Settings → API Keys</strong>.</li>
+                      <li>Generate a Test Key (starts with <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-indigo-600">rzp_test_...</code>) or Live Key.</li>
+                      <li>Set <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-indigo-600">RAZORPAY_KEY_ID</code> and <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-indigo-600">RAZORPAY_KEY_SECRET</code> in the project Settings / Secrets.</li>
+                    </ol>
+                  </div>
+                </div>
+
+                {/* Supported Payment Channels */}
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-700/80">
+                  <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 block mb-1.5">
+                    Customer Payment Modes Enabled:
+                  </span>
+                  <div className="flex flex-wrap gap-2 text-[10px]">
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700/80 font-bold text-slate-700 dark:text-slate-200">
+                      ⚡ UPI (Google Pay, PhonePe, Paytm, BHIM, Cred)
+                    </span>
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700/80 font-bold text-slate-700 dark:text-slate-200">
+                      💳 Credit & Debit Cards (RuPay, Visa, Mastercard, Maestro)
+                    </span>
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700/80 font-bold text-slate-700 dark:text-slate-200">
+                      🏦 NetBanking (50+ Indian Banks)
+                    </span>
+                    <span className="px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700/80 font-bold text-slate-700 dark:text-slate-200">
+                      👛 Wallets (Paytm, Mobikwik, PhonePe)
+                    </span>
                   </div>
                 </div>
               </div>
@@ -4499,30 +4657,30 @@ export const AdminDashboardView: React.FC = () => {
 
             {/* SECTION 5: INVOICING & TERMS */}
             {(activeSettingsSection === 'all' || activeSettingsSection === 'invoicing') && (
-              <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-4 sm:p-6 space-y-4 shadow-xs">
-                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-3">
-                  <Receipt className="w-4 h-4 text-teal-600" />
-                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
+              <div className="bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200 dark:border-slate-700 p-3.5 sm:p-4.5 space-y-3 shadow-xs">
+                <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700 pb-2.5">
+                  <Receipt className="w-3.5 h-3.5 text-teal-600" />
+                  <h4 className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white">
                     5. GST Invoice Formatting & Printed Terms
                   </h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5">
                   <div>
-                    <label className="block font-semibold mb-1">Invoice Prefix *</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Invoice Prefix *</label>
                     <input
                       type="text"
                       required
                       value={settingsForm.invoicePrefix}
                       onChange={(e) => setSettingsForm({ ...settingsForm, invoicePrefix: e.target.value })}
                       placeholder="ABC/26-27/"
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono uppercase font-bold"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono uppercase font-bold text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
-                    <span className="text-[10px] text-slate-400 mt-1 block">e.g. ABC/26-27/ will generate ABC/26-27/1001</span>
+                    <span className="text-[10px] text-slate-400 mt-0.5 block">e.g. ABC/26-27/ will generate ABC/26-27/1001</span>
                   </div>
 
                   <div>
-                    <label className="block font-semibold mb-1">Invoice Starting Value</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Invoice Starting Value</label>
                     <input
                       type="number"
                       min={1}
@@ -4533,18 +4691,18 @@ export const AdminDashboardView: React.FC = () => {
                           invoiceNumberStartingValue: parseInt(e.target.value) || 1001,
                         })
                       }
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono font-bold"
+                      className="w-full px-2.5 py-1.5 sm:py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 font-mono font-bold text-xs sm:text-sm text-slate-900 dark:text-white"
                     />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="block font-semibold mb-1">Printed Terms & Conditions (On Invoices & Bills)</label>
+                    <label className="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Printed Terms & Conditions (On Invoices & Bills)</label>
                     <textarea
-                      rows={4}
+                      rows={3}
                       value={settingsForm.termsAndConditions}
                       onChange={(e) => setSettingsForm({ ...settingsForm, termsAndConditions: e.target.value })}
                       placeholder="1. Goods once sold will be replaced within 3 days if defective in original packaging..."
-                      className="w-full p-2.5 rounded-xl border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs font-mono"
+                      className="w-full px-2.5 py-2 rounded-lg border bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-900 dark:text-white"
                     />
                   </div>
                 </div>
@@ -4552,26 +4710,26 @@ export const AdminDashboardView: React.FC = () => {
             )}
 
             {/* Bottom Actions Bar */}
-            <div className="pt-4 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-3">
               <div className="text-xs text-slate-500">
                 <span>Database Status: </span>
                 <span className="font-semibold text-emerald-600">Syncs directly to Supabase cloud table & local cache</span>
               </div>
 
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
                 <button
                   type="submit"
                   disabled={isSavingShopSettings}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full sm:w-auto min-h-[38px] px-5 py-2 rounded-lg bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer touch-manipulation"
                 >
                   {isSavingShopSettings ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
                       <span>Saving & Syncing to Cloud...</span>
                     </>
                   ) : (
                     <>
-                      <CheckCircle2 className="w-4 h-4" />
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>Save Shop Profile & Sync Cloud</span>
                     </>
                   )}

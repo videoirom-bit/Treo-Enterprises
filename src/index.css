@@ -2,6 +2,42 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Mobile Responsive Baseline & Touch Optimization */
+html {
+  -webkit-text-size-adjust: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100%;
+  min-width: 320px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Ensure images, svgs and videos never exceed container */
+img, svg, video, canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Touch targets and smooth scrolling */
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* Smooth horizontal scroll for table and tabs containers on mobile */
+.overflow-x-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
 /* A4 Print Media Styles */
 @page {
   size: A4 portrait;

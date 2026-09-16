@@ -16,8 +16,8 @@ export const ABCStoreLogo: React.FC<ABCStoreLogoProps> = ({
   // Dimension definitions for emblem/image
   const heightClasses = {
     xs: 'h-7',
-    sm: 'h-9',
-    md: 'h-11 sm:h-12',
+    sm: 'h-8 sm:h-9',
+    md: 'h-8.5 sm:h-12',
     lg: 'h-14 sm:h-16',
     xl: 'h-20 sm:h-24',
     '2xl': 'h-28 sm:h-32',
@@ -25,8 +25,8 @@ export const ABCStoreLogo: React.FC<ABCStoreLogoProps> = ({
 
   const iconDimensions = {
     xs: 'w-7 h-7',
-    sm: 'w-9 h-9',
-    md: 'w-11 h-11',
+    sm: 'w-8 h-8 sm:w-9 sm:h-9',
+    md: 'w-8.5 h-8.5 sm:w-11 sm:h-11',
     lg: 'w-14 h-14',
     xl: 'w-20 h-20',
     '2xl': 'w-28 h-28',
@@ -34,8 +34,8 @@ export const ABCStoreLogo: React.FC<ABCStoreLogoProps> = ({
 
   const textSizeClasses = {
     xs: { main: 'text-xs', sub: 'text-[9px]' },
-    sm: { main: 'text-sm', sub: 'text-[10px]' },
-    md: { main: 'text-base sm:text-lg', sub: 'text-[11px]' },
+    sm: { main: 'text-xs sm:text-sm', sub: 'text-[9px] sm:text-[10px]' },
+    md: { main: 'text-xs sm:text-base lg:text-lg', sub: 'text-[9px] sm:text-[11px]' },
     lg: { main: 'text-xl sm:text-2xl', sub: 'text-xs' },
     xl: { main: 'text-2xl sm:text-3xl', sub: 'text-sm' },
     '2xl': { main: 'text-3xl sm:text-4xl', sub: 'text-base' },
@@ -191,15 +191,15 @@ export const ABCStoreLogo: React.FC<ABCStoreLogoProps> = ({
 
   // Variant: Full (Mascot + Treo Enterprises branding)
   return (
-    <div className={`inline-flex items-center gap-2.5 sm:gap-3.5 ${className}`}>
+    <div className={`inline-flex items-center gap-2 sm:gap-3.5 max-w-full ${className}`}>
       {/* Brand Mascot Icon */}
       {MascotIcon}
 
       {/* Brand Typography & Pill Badge */}
       <div className="flex flex-col justify-center min-w-0">
-        <div className="flex items-center gap-1.5 leading-none">
+        <div className="flex items-center gap-1 sm:gap-1.5 leading-none">
           {/* Colorful Bubbly "TREO" Accent */}
-          <div className="flex items-center font-black tracking-tight text-base sm:text-xl font-sans drop-shadow-2xs">
+          <div className="flex items-center font-black tracking-tight text-sm sm:text-xl font-sans drop-shadow-2xs shrink-0">
             <span className="text-red-500 font-extrabold">T</span>
             <span className="text-blue-600 font-extrabold">R</span>
             <span className="text-cyan-500 font-extrabold">E</span>
@@ -208,7 +208,7 @@ export const ABCStoreLogo: React.FC<ABCStoreLogoProps> = ({
 
           {/* Bold ENTERPRISES */}
           <span
-            className={`font-black tracking-tight ${textSizeClasses.main} ${
+            className={`font-black tracking-tight truncate ${textSizeClasses.main} ${
               inverted ? 'text-white' : 'text-blue-950 dark:text-white'
             }`}
           >
@@ -217,8 +217,8 @@ export const ABCStoreLogo: React.FC<ABCStoreLogoProps> = ({
         </div>
 
         {/* Subtitle Pill Badge: PAPER & OFFICE SUPPLIES */}
-        <div className="mt-1 flex items-center gap-1.5">
-          <span className="inline-block px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold tracking-wider uppercase bg-[#081d58] text-white shadow-xs">
+        <div className="mt-0.5 sm:mt-1 flex items-center gap-1 sm:gap-1.5">
+          <span className="inline-block px-1.5 py-0.5 sm:px-2 rounded-full text-[8px] sm:text-[10px] font-bold tracking-wider uppercase bg-[#081d58] text-white shadow-xs truncate max-w-[140px] sm:max-w-none">
             Paper &amp; Office Supplies
           </span>
           {variant !== 'compact' && (

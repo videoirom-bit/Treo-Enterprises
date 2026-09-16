@@ -69,20 +69,20 @@ export const CartView: React.FC = () => {
                   id={`cart-row-${product.id}`}
                   className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
                 >
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
                     <img
                       src={product.imageUrl}
                       alt={product.name}
-                      className="w-16 h-16 rounded-xl object-cover bg-slate-100 dark:bg-slate-900 shrink-0 border border-slate-200 dark:border-slate-700"
+                      className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover bg-slate-100 dark:bg-slate-900 shrink-0 border border-slate-200 dark:border-slate-700"
                     />
-                    <div>
-                      <span className="text-[11px] font-semibold text-teal-600 dark:text-teal-400">
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[11px] font-semibold text-teal-600 dark:text-teal-400 block truncate">
                         {product.brand} • {product.category}
                       </span>
                       <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
                         {product.name}
                       </h3>
-                      <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                      <div className="flex items-center gap-2 sm:gap-3 text-xs text-slate-500 mt-1 flex-wrap">
                         <span className="font-mono text-[11px]">SKU: {product.sku}</span>
                         <span>•</span>
                         <span>GST {product.gstRate}%</span>
@@ -96,20 +96,22 @@ export const CartView: React.FC = () => {
 
                   {/* Quantity and Subtotal */}
                   <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4 self-end sm:self-center">
-                    <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-900 text-xs">
+                    <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900 text-xs">
                       <button
                         onClick={() => updateCartQuantity(product.id, quantity - 1)}
-                        className="px-2.5 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
+                        className="px-3 py-2 min-h-[44px] min-w-[36px] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold cursor-pointer touch-manipulation"
+                        aria-label="Decrease quantity"
                       >
                         -
                       </button>
-                      <span className="px-3 py-1 font-bold text-slate-800 dark:text-slate-200">
+                      <span className="px-3 py-1 font-bold text-slate-800 dark:text-slate-200 min-w-[24px] text-center">
                         {quantity}
                       </span>
                       <button
                         onClick={() => updateCartQuantity(product.id, quantity + 1)}
                         disabled={quantity >= product.currentStock}
-                        className="px-2.5 py-1 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold disabled:opacity-40"
+                        className="px-3 py-2 min-h-[44px] min-w-[36px] flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold disabled:opacity-40 cursor-pointer touch-manipulation"
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>
@@ -123,8 +125,9 @@ export const CartView: React.FC = () => {
 
                     <button
                       onClick={() => removeFromCart(product.id)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 transition"
+                      className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition cursor-pointer touch-manipulation"
                       title="Remove item"
+                      aria-label="Remove item"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -209,7 +212,7 @@ export const CartView: React.FC = () => {
             <button
               id="proceed-checkout-btn"
               onClick={() => setActiveView('checkout')}
-              className="w-full py-3.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition"
+              className="w-full min-h-[48px] py-3.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition cursor-pointer touch-manipulation"
             >
               <span>Proceed to Checkout</span>
               <ArrowRight className="w-4 h-4" />

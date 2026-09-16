@@ -331,7 +331,7 @@ export const HomeView: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           <div className="p-5 rounded-2xl bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 text-center space-y-2">
             <div className="w-10 h-10 mx-auto rounded-xl bg-teal-50 dark:bg-teal-950/60 flex items-center justify-center text-teal-600">
               <ShieldCheck className="w-5 h-5" />

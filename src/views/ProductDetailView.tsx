@@ -187,64 +187,66 @@ export const ProductDetailView: React.FC = () => {
 
           {/* Action buttons & Quantity */}
           <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {/* Quantity selector */}
-              <div className="flex items-center border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-900 text-sm">
+              <div className="flex items-center justify-center border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-900 text-sm">
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                   disabled={isOutOfStock}
-                  className="px-3.5 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
+                  className="px-4 py-2.5 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold min-h-[44px]"
                 >
                   -
                 </button>
-                <span className="px-4 py-2 font-bold text-slate-800 dark:text-slate-200">
+                <span className="px-5 py-2.5 font-bold text-slate-800 dark:text-slate-200 min-w-[36px] text-center">
                   {quantity}
                 </span>
                 <button
                   type="button"
                   onClick={() => setQuantity((q) => Math.min(product.currentStock, q + 1))}
                   disabled={isOutOfStock || quantity >= product.currentStock}
-                  className="px-3.5 py-2 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold"
+                  className="px-4 py-2.5 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold min-h-[44px]"
                 >
                   +
                 </button>
               </div>
 
-              {/* Add to Cart */}
-              <button
-                id="product-detail-add-cart-btn"
-                onClick={() => addToCart(product, quantity)}
-                disabled={isOutOfStock}
-                className="flex-1 py-3 px-5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition disabled:opacity-40"
-              >
-                <ShoppingCart className="w-4 h-4" />
-                <span>Add to Cart</span>
-              </button>
+              <div className="flex items-center gap-2.5 flex-1">
+                {/* Add to Cart */}
+                <button
+                  id="product-detail-add-cart-btn"
+                  onClick={() => addToCart(product, quantity)}
+                  disabled={isOutOfStock}
+                  className="flex-1 py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition disabled:opacity-40 min-h-[44px] cursor-pointer"
+                >
+                  <ShoppingCart className="w-4 h-4 shrink-0" />
+                  <span>Add to Cart</span>
+                </button>
 
-              {/* Buy Now */}
-              <button
-                id="product-detail-buy-now-btn"
-                onClick={() => {
-                  addToCart(product, quantity);
-                  setActiveView('checkout');
-                }}
-                disabled={isOutOfStock}
-                className="py-3 px-5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md transition disabled:opacity-40"
-              >
-                <Zap className="w-4 h-4 text-amber-400" />
-                <span>Buy Now</span>
-              </button>
+                {/* Buy Now */}
+                <button
+                  id="product-detail-buy-now-btn"
+                  onClick={() => {
+                    addToCart(product, quantity);
+                    setActiveView('checkout');
+                  }}
+                  disabled={isOutOfStock}
+                  className="py-3 px-4 sm:px-5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md transition disabled:opacity-40 min-h-[44px] cursor-pointer shrink-0"
+                >
+                  <Zap className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span>Buy Now</span>
+                </button>
+              </div>
             </div>
 
             {/* WhatsApp Enquiry button */}
             <button
               id="product-detail-whatsapp-btn"
               onClick={handleWhatsAppInquiry}
-              className="w-full py-2.5 px-4 rounded-xl border border-emerald-500/40 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 font-semibold text-xs flex items-center justify-center gap-2 transition"
+              className="w-full py-2.5 px-4 rounded-xl border border-emerald-500/40 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 font-semibold text-xs flex items-center justify-center gap-2 transition min-h-[44px]"
             >
-              <MessageCircle className="w-4 h-4 text-emerald-600" />
-              <span>Ask Shop Owner on WhatsApp for Bulk / School Discounts</span>
+              <MessageCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span className="text-center">Ask Shop Owner on WhatsApp for Bulk / School Discounts</span>
             </button>
           </div>
         </div>
@@ -252,10 +254,10 @@ export const ProductDetailView: React.FC = () => {
 
       {/* Tabs: Specifications, GST Info, Returns */}
       <div className="bg-white dark:bg-slate-800/90 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-700/80 shadow-xs space-y-6">
-        <div className="flex border-b border-slate-200 dark:border-slate-700 gap-4 text-xs font-bold">
+        <div className="flex border-b border-slate-200 dark:border-slate-700 gap-3 sm:gap-4 text-xs font-bold overflow-x-auto scrollbar-none whitespace-nowrap pb-0.5">
           <button
             onClick={() => setSelectedTab('specs')}
-            className={`pb-3 border-b-2 transition ${
+            className={`pb-3 border-b-2 transition shrink-0 min-h-[40px] ${
               selectedTab === 'specs'
                 ? 'border-teal-600 text-teal-600 dark:text-teal-400'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -265,7 +267,7 @@ export const ProductDetailView: React.FC = () => {
           </button>
           <button
             onClick={() => setSelectedTab('gst')}
-            className={`pb-3 border-b-2 transition ${
+            className={`pb-3 border-b-2 transition shrink-0 min-h-[40px] ${
               selectedTab === 'gst'
                 ? 'border-teal-600 text-teal-600 dark:text-teal-400'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -275,7 +277,7 @@ export const ProductDetailView: React.FC = () => {
           </button>
           <button
             onClick={() => setSelectedTab('return')}
-            className={`pb-3 border-b-2 transition ${
+            className={`pb-3 border-b-2 transition shrink-0 min-h-[40px] ${
               selectedTab === 'return'
                 ? 'border-teal-600 text-teal-600 dark:text-teal-400'
                 : 'border-transparent text-slate-500 hover:text-slate-800'

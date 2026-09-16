@@ -125,7 +125,7 @@ export const ProductsCatalogView: React.FC = () => {
           <button
             type="button"
             onClick={() => setMobileFiltersOpen(!mobileFiltersOpen)}
-            className="lg:hidden px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold flex items-center gap-1.5"
+            className="lg:hidden min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold flex items-center gap-1.5 cursor-pointer touch-manipulation"
           >
             <SlidersHorizontal className="w-3.5 h-3.5 text-teal-600" />
             <span>Filters</span>
@@ -140,7 +140,7 @@ export const ProductsCatalogView: React.FC = () => {
               id="sort-select-dropdown"
               value={priceSort}
               onChange={(e: any) => setPriceSort(e.target.value)}
-              className="text-xs font-semibold py-2 px-2.5 sm:px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600 flex-1 sm:flex-initial"
+              className="min-h-[44px] text-xs font-semibold py-2 px-2.5 sm:px-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-teal-600 flex-1 sm:flex-initial cursor-pointer"
             >
               <option value="default">Featured</option>
               <option value="popularity">Popularity</option>
@@ -153,7 +153,7 @@ export const ProductsCatalogView: React.FC = () => {
           {(selectedCategoryFilter || selectedBrand !== 'All' || searchQuery || selectedStockStatus !== 'All' || minDiscount > 0) && (
             <button
               onClick={resetAllFilters}
-              className="p-2 rounded-xl text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0"
+              className="min-h-[44px] min-w-[44px] p-2 rounded-xl text-slate-500 hover:text-red-600 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0 flex items-center justify-center cursor-pointer touch-manipulation"
               title="Reset all filters"
             >
               <RotateCcw className="w-4 h-4" />
@@ -226,7 +226,7 @@ export const ProductsCatalogView: React.FC = () => {
                 id="brand-filter-select"
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
-                className="w-full text-xs py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200"
+                className="w-full min-h-[44px] text-xs py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 cursor-pointer"
               >
                 {uniqueBrands.map((b) => (
                   <option key={b} value={b}>

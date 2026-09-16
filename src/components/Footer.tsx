@@ -174,10 +174,10 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom bar with legal & admin shortcut */}
-        <div className="border-t border-slate-800/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+        <div className="border-t border-slate-800/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500 text-center sm:text-left">
           <p>© {new Date().getFullYear()} {shopSettings.shopName}. All rights reserved.</p>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 flex-wrap justify-center">
             <button
               onClick={() => setActiveView('admin')}
               className="text-slate-400 hover:text-white transition flex items-center gap-1"

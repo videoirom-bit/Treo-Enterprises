@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { calculateGST, formatINR, numberToWordsINR, isValidGSTIN, isValidIndianMobile } from '../utils/gstUtils';
 import { OrderType, PaymentMethod, OrderItem } from '../types';
@@ -12,7 +12,19 @@ import {
   ArrowLeft,
   FileCheck,
   QrCode,
+  ShieldCheck,
+  Lock,
+  ExternalLink,
+  Sparkles,
+  CheckCircle2,
+  Zap,
 } from 'lucide-react';
+import {
+  launchRazorpayCheckout,
+  fetchRazorpayConfig,
+  verifyRazorpayPayment,
+  RazorpayGatewayConfig,
+} from '../utils/razorpay';
 
 export const CheckoutView: React.FC = () => {
   const {
@@ -24,23 +36,30 @@ export const CheckoutView: React.FC = () => {
     showToast,
   } = useApp();
 
-  // Form states
-  const [customerName, setCustomerName] = useState('Anil Agarwal');
-  const [mobile, setMobile] = useState('9826123456');
-  const [whatsapp, setWhatsapp] = useState('9826123456');
-  const [email, setEmail] = useState('anil.agarwal@gmail.com');
-  const [billingAddress, setBillingAddress] = useState('B-44, Civil Lines');
-  const [shippingAddress, setShippingAddress] = useState('B-44, Civil Lines');
-  const [city, setCity] = useState('Raipur');
-  const [customerState, setCustomerState] = useState(shopSettings.state); // Intra-state by default
-  const [pincode, setPincode] = useState('492001');
-  const [gstin, setGstin] = useState('22ABCDE1234F1Z5');
-  const [companyName, setCompanyName] = useState('Agarwal Coaching Academy');
+  // Form states - cleared of demo details for fresh entry
+  const [customerName, setCustomerName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [whatsapp, setWhatsapp] = useState('');
+  const [email, setEmail] = useState('');
+  const [billingAddress, setBillingAddress] = useState('');
+  const [shippingAddress, setShippingAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [customerState, setCustomerState] = useState(shopSettings.state || 'Chhattisgarh'); // Defaults to shop state for intra-state GST
+  const [pincode, setPincode] = useState('');
+  const [gstin, setGstin] = useState('');
+  const [companyName, setCompanyName] = useState('');
 
   const [orderType, setOrderType] = useState<OrderType>('Store Pickup');
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('UPI');
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('Razorpay');
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [razorpayConfig, setRazorpayConfig] = useState<RazorpayGatewayConfig | null>(null);
+
+  useEffect(() => {
+    fetchRazorpayConfig().then((cfg) => {
+      setRazorpayConfig(cfg);
+    });
+  }, []);
 
   if (cart.length === 0) {
     return (
@@ -136,6 +155,110 @@ export const CheckoutView: React.FC = () => {
       const paymentStatus = paymentMethod === 'Credit' ? 'Pending' : 'Paid';
       const paidAmount = paymentStatus === 'Paid' ? gstDetails.grandTotal : 0;
       const pendingAmount = paymentStatus === 'Pending' ? gstDetails.grandTotal : 0;
+
+      if (paymentMethod === 'Razorpay') {
+        launchRazorpayCheckout({
+          amount: gstDetails.grandTotal,
+          shopName: shopSettings.shopName || 'Treo Enterprises',
+          shopLogo: shopSettings.shopLogo,
+          description: `Tax Invoice Bill (${cart.length} items)`,
+          primaryColor: shopSettings.primaryBrandColor || '#0f766e',
+          customer: {
+            name: customerName.trim(),
+            email: email.trim(),
+            mobile: mobile.trim(),
+            address: billingAddress.trim(),
+            city: city.trim(),
+            state: customerState.trim(),
+            pincode: pincode.trim(),
+          },
+          onSuccess: async (response, isSandbox) => {
+            try {
+              setIsSubmitting(true);
+              const verifyRes = await verifyRazorpayPayment({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                isSandbox,
+              });
+
+              if (!verifyRes.verified && !isSandbox) {
+                setValidationError(verifyRes.error || 'Payment signature verification failed.');
+                setIsSubmitting(false);
+                return;
+              }
+
+              const paymentHistoryRecord = {
+                id: `pay_${Date.now()}`,
+                orderId: '',
+                amount: gstDetails.grandTotal,
+                method: 'Razorpay',
+                status: 'Paid',
+                transactionReference: response.razorpay_payment_id,
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                timestamp: new Date().toISOString(),
+                notes: `Instant payment captured via Razorpay Gateway (${response.razorpay_payment_id})${isSandbox ? ' [Sandbox]' : ''}`,
+              };
+
+              const newOrder = createOrder({
+                customer: {
+                  name: customerName.trim(),
+                  mobile: mobile.trim(),
+                  whatsapp: (whatsapp || mobile).trim(),
+                  email: email.trim(),
+                  billingAddress: billingAddress.trim(),
+                  shippingAddress: (shippingAddress || billingAddress).trim(),
+                  city: city.trim(),
+                  state: customerState.trim(),
+                  pincode: pincode.trim(),
+                  gstin: gstin.trim() ? gstin.trim().toUpperCase() : undefined,
+                  companyName: companyName.trim() || undefined,
+                },
+                orderType,
+                items: orderItems,
+                subtotal: gstDetails.subtotal,
+                totalDiscount: gstDetails.totalDiscount,
+                taxableAmount: gstDetails.taxableAmount,
+                isInterState: gstDetails.isInterState,
+                cgst: gstDetails.cgst,
+                sgst: gstDetails.sgst,
+                igst: gstDetails.igst,
+                totalTax: gstDetails.totalTax,
+                deliveryCharge,
+                roundOff: gstDetails.roundOff,
+                grandTotal: gstDetails.grandTotal,
+                amountInWords: numberToWordsINR(gstDetails.grandTotal),
+                paymentMethod: 'Razorpay',
+                paymentStatus: 'Paid',
+                paidAmount: gstDetails.grandTotal,
+                pendingAmount: 0,
+                orderStatus: 'Confirmed',
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+                paymentHistory: [paymentHistoryRecord],
+              });
+
+              showToast(`Payment of ${formatINR(gstDetails.grandTotal)} verified via Razorpay!`);
+              setSelectedOrderForInvoice(newOrder);
+              setActiveView('invoice-view');
+            } catch (err: any) {
+              setValidationError(err.message || 'Error completing verified order.');
+            } finally {
+              setIsSubmitting(false);
+            }
+          },
+          onFailure: (error) => {
+            setIsSubmitting(false);
+            setValidationError(error.description || error.reason || 'Payment was cancelled or could not be completed.');
+          },
+          onDismiss: () => {
+            setIsSubmitting(false);
+          },
+        });
+        return;
+      }
 
       const newOrder = createOrder({
         customer: {
@@ -268,7 +391,8 @@ export const CheckoutView: React.FC = () => {
                   required
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                  placeholder="e.g. Ramesh Kumar"
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
 
@@ -282,7 +406,9 @@ export const CheckoutView: React.FC = () => {
                   required
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono"
+                  placeholder="e.g. 9876543210"
+                  maxLength={10}
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-slate-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
 
@@ -294,8 +420,9 @@ export const CheckoutView: React.FC = () => {
                   type="tel"
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  placeholder="Same as mobile"
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono"
+                  placeholder="10-digit number (or leave blank for same)"
+                  maxLength={10}
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-slate-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
 
@@ -307,7 +434,8 @@ export const CheckoutView: React.FC = () => {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                  placeholder="customer@example.com (optional)"
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
 
@@ -319,7 +447,8 @@ export const CheckoutView: React.FC = () => {
                   rows={2}
                   value={billingAddress}
                   onChange={(e) => setBillingAddress(e.target.value)}
-                  className="w-full py-2 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                  placeholder="House/Shop no, street, locality, landmark"
+                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
 
@@ -331,7 +460,8 @@ export const CheckoutView: React.FC = () => {
                   type="text"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                  placeholder="e.g. Raipur"
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
 
@@ -343,7 +473,8 @@ export const CheckoutView: React.FC = () => {
                   type="text"
                   value={customerState}
                   onChange={(e) => setCustomerState(e.target.value)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                  placeholder="e.g. Chhattisgarh"
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
 
@@ -355,7 +486,9 @@ export const CheckoutView: React.FC = () => {
                   type="text"
                   value={pincode}
                   onChange={(e) => setPincode(e.target.value)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono"
+                  placeholder="e.g. 492001"
+                  maxLength={6}
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono text-slate-900 dark:text-white placeholder:text-slate-400"
                 />
               </div>
 
@@ -368,7 +501,7 @@ export const CheckoutView: React.FC = () => {
                   value={gstin}
                   placeholder="e.g. 22ABCDE1234F1Z5"
                   onChange={(e) => setGstin(e.target.value.toUpperCase())}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono uppercase"
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 font-mono uppercase"
                 />
               </div>
 
@@ -381,7 +514,7 @@ export const CheckoutView: React.FC = () => {
                   value={companyName}
                   placeholder="School, Coaching, Corporate Firm name"
                   onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700"
                 />
               </div>
             </div>
@@ -394,22 +527,115 @@ export const CheckoutView: React.FC = () => {
               <span>Select Payment Option</span>
             </h3>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-semibold">
-              {(['UPI', 'Cash', 'Card', 'Bank Transfer', 'Pay at Shop', 'Credit'] as PaymentMethod[]).map((method) => (
-                <button
-                  key={method}
-                  type="button"
-                  onClick={() => setPaymentMethod(method)}
-                  className={`p-3 rounded-xl border text-center transition ${
-                    paymentMethod === method
-                      ? 'border-teal-600 bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 ring-1 ring-teal-600'
-                      : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  {method}
-                </button>
-              ))}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs font-semibold">
+              {(['Razorpay', 'UPI', 'Cash', 'Card', 'Bank Transfer', 'Pay at Shop', 'Credit'] as PaymentMethod[]).map((method) => {
+                const isRzp = method === 'Razorpay';
+                const isSelected = paymentMethod === method;
+                return (
+                  <button
+                    key={method}
+                    type="button"
+                    onClick={() => setPaymentMethod(method)}
+                    className={`p-3 rounded-xl border text-center min-h-[52px] flex flex-col items-center justify-center gap-0.5 transition relative cursor-pointer ${
+                      isSelected
+                        ? isRzp
+                          ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-600/40 shadow-xs'
+                          : 'border-teal-600 bg-teal-50 dark:bg-teal-950/60 text-teal-700 dark:text-teal-300 ring-1 ring-teal-600'
+                        : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    {isRzp && (
+                      <span className="absolute -top-2.5 bg-indigo-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full shadow-xs">
+                        #1 UPI SETUP
+                      </span>
+                    )}
+                    <div className="flex items-center gap-1.5">
+                      {isRzp && <ShieldCheck className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />}
+                      <span className="font-bold">{isRzp ? 'Razorpay UPI' : method}</span>
+                    </div>
+                    {isRzp && (
+                      <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold">
+                        GPay • PhonePe • QR
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
             </div>
+
+            {/* Razorpay Gateway breakdown box */}
+            {paymentMethod === 'Razorpay' && (
+              <div className="p-4 rounded-xl bg-linear-to-br from-indigo-50/90 via-blue-50/50 to-slate-50 dark:from-indigo-950/40 dark:via-blue-950/20 dark:to-slate-900 border border-indigo-200/80 dark:border-indigo-800/60 text-xs space-y-3.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-indigo-100 dark:border-indigo-900/60 pb-2.5">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-xs shrink-0">
+                      ₹
+                    </div>
+                    <div>
+                      <span className="font-extrabold text-slate-900 dark:text-white block">
+                        Razorpay UPI & Online Gateway
+                      </span>
+                      <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                        Zero-wait instant verification with live GST tax receipt
+                      </span>
+                    </div>
+                  </div>
+                  <span
+                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[10px] font-bold self-start sm:self-center ${
+                      razorpayConfig?.isConfigured
+                        ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800'
+                        : 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800'
+                    }`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+                    <span>{razorpayConfig?.isConfigured ? 'Gateway Active (Live UPI)' : 'Gateway Sandbox Mode'}</span>
+                  </span>
+                </div>
+
+                {/* Primary UPI Highlight */}
+                <div className="p-3 rounded-lg bg-white dark:bg-slate-800/90 border border-indigo-100 dark:border-indigo-900/40 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-[11px] text-indigo-950 dark:text-indigo-200 flex items-center gap-1.5">
+                      <Zap className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                      <span>Primary Mode: Instant UPI Payment</span>
+                    </span>
+                    <span className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded">
+                      Zero Surcharge
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-center">
+                    <div className="p-1.5 rounded-md bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                      <span className="block font-bold text-[11px] text-slate-800 dark:text-slate-200">Google Pay</span>
+                      <span className="text-[9px] text-slate-400">UPI App & Intent</span>
+                    </div>
+                    <div className="p-1.5 rounded-md bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                      <span className="block font-bold text-[11px] text-slate-800 dark:text-slate-200">PhonePe</span>
+                      <span className="text-[9px] text-slate-400">Direct App Pay</span>
+                    </div>
+                    <div className="p-1.5 rounded-md bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                      <span className="block font-bold text-[11px] text-slate-800 dark:text-slate-200">Paytm UPI</span>
+                      <span className="text-[9px] text-slate-400">Wallet & UPI</span>
+                    </div>
+                    <div className="p-1.5 rounded-md bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                      <span className="block font-bold text-[11px] text-slate-800 dark:text-slate-200">Dynamic QR</span>
+                      <span className="text-[9px] text-slate-400">Scan & Pay</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Channels */}
+                <div className="space-y-1 text-[11px]">
+                  <span className="text-slate-600 dark:text-slate-400 block font-medium">
+                    Also accepts Debit/Credit Cards (RuPay, Visa, MC), 50+ NetBanking, and Wallets.
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400 pt-1 border-t border-indigo-100 dark:border-indigo-900/40">
+                  <Lock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                  <span>RBI & NPCI Compliant • 256-Bit SSL Encrypted • Instant Tax Invoice upon approval.</span>
+                </div>
+              </div>
+            )}
 
             {/* UPI details box */}
             {paymentMethod === 'UPI' && (
@@ -506,10 +732,27 @@ export const CheckoutView: React.FC = () => {
               id="confirm-order-button"
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-4 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-teal-900/20 transition disabled:opacity-50"
+              className={`w-full py-3.5 sm:py-4 px-4 rounded-xl text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg transition disabled:opacity-50 min-h-[48px] cursor-pointer ${
+                paymentMethod === 'Razorpay'
+                  ? 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-950/20'
+                  : 'bg-teal-600 hover:bg-teal-700 shadow-teal-900/20'
+              }`}
             >
-              <FileCheck className="w-5 h-5" />
-              <span>{isSubmitting ? 'Generating Invoice...' : 'Confirm Order & Generate GST Bill'}</span>
+              {paymentMethod === 'Razorpay' ? (
+                <>
+                  <Lock className="w-4 h-4 text-indigo-200" />
+                  <span>
+                    {isSubmitting
+                      ? 'Opening Razorpay UPI Gateway...'
+                      : `Pay ${formatINR(gstDetails.grandTotal)} via Razorpay UPI & Cards`}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <FileCheck className="w-5 h-5" />
+                  <span>{isSubmitting ? 'Generating Invoice...' : 'Confirm Order & Generate GST Bill'}</span>
+                </>
+              )}
             </button>
           </div>
         </div>

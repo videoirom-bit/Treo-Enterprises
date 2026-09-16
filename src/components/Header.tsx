@@ -93,9 +93,9 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors shadow-xs print:hidden">
+    <header className="sticky top-0 z-40 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors shadow-xs print:hidden overflow-x-clip">
       {/* Top micro-bar with contact & quick note */}
-      <div className="bg-slate-900 text-slate-200 text-xs py-1.5 px-3 sm:px-4">
+      <div className="w-full bg-slate-900 text-slate-200 text-xs py-1 sm:py-1.5 px-2.5 sm:px-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center gap-2">
           <div className="flex items-center space-x-2 sm:space-x-4 min-w-0">
             <a
@@ -103,7 +103,7 @@ export const Header: React.FC = () => {
               className="flex items-center gap-1 text-[11px] sm:text-xs truncate hover:text-amber-400 transition"
               title="Click to call shop"
             >
-              <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
               <span className="truncate font-medium">{shopSettings.phoneNumber}</span>
             </a>
             <span className="hidden sm:inline-block text-slate-400">|</span>
@@ -112,15 +112,15 @@ export const Header: React.FC = () => {
             </span>
           </div>
 
-          <div className="flex items-center space-x-2 sm:space-x-3 text-[11px] shrink-0">
+          <div className="flex items-center space-x-1.5 sm:space-x-3 text-[11px] shrink-0">
             <span className="hidden lg:inline text-slate-300">{shopSettings.openingHours}</span>
             <button
               id="header-admin-link-btn"
               onClick={() => handleNavClick('admin')}
-              className="flex items-center gap-1.5 text-teal-300 hover:text-white transition font-medium px-2 py-0.5 rounded hover:bg-slate-800 text-[11px] whitespace-nowrap"
+              className="flex items-center gap-1 text-teal-300 hover:text-white transition font-medium px-1.5 sm:px-2 py-0.5 rounded hover:bg-slate-800 text-[10px] sm:text-[11px] whitespace-nowrap"
             >
-              <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-teal-400" />
-              <span>Admin Panel</span>
+              <ShieldCheck className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 text-teal-400" />
+              <span>Admin</span>
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
             </button>
           </div>
@@ -128,19 +128,19 @@ export const Header: React.FC = () => {
       </div>
 
       {/* Main Navigation Header */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20 gap-2 sm:gap-4">
+      <div className="w-full max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-12 sm:h-16 gap-1.5 sm:gap-3">
           {/* Brand Logo & Name */}
           <div
             id="brand-logo-container"
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0 min-w-0 group"
+            className="flex items-center gap-1.5 sm:gap-2.5 cursor-pointer shrink min-w-0 max-w-[calc(100vw-105px)] sm:max-w-none group"
           >
             <ABCStoreLogo size="md" variant="full" inverted={isDarkMode} />
           </div>
 
-          {/* Search bar in center */}
-          <div className="hidden md:flex flex-1 max-w-md mx-4">
+          {/* Search bar in center (Desktop only) */}
+          <div className="hidden md:flex flex-1 max-w-[320px] lg:max-w-[380px] mx-2 lg:mx-3">
             <div className="relative w-full">
               <input
                 id="global-search-input"
@@ -152,23 +152,25 @@ export const Header: React.FC = () => {
                     setActiveView('products');
                   }
                 }}
-                placeholder="Search A4 paper, pens, notebooks, stapler, registers..."
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-600 dark:text-white placeholder-slate-400 transition"
+                placeholder="Search stationery, paper, pens..."
+                className="w-full pl-8.5 pr-8 py-1.5 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg text-xs lg:text-sm focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-700 dark:text-white placeholder-slate-400 transition"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-3 text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 rounded cursor-pointer"
+                  title="Clear search"
+                  aria-label="Clear search"
                 >
-                  Clear
+                  <X className="w-3.5 h-3.5" />
                 </button>
               )}
             </div>
           </div>
 
           {/* Header Action Items */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Track Order Direct Action Button */}
             <button
               id="header-track-order-btn"
@@ -255,11 +257,12 @@ export const Header: React.FC = () => {
             <button
               id="header-cart-btn"
               onClick={() => handleNavClick('cart')}
-              className="relative p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-950/40 text-slate-800 dark:text-slate-100 transition group"
+              aria-label="Shopping Cart"
+              className="relative p-1.5 sm:p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-teal-50 dark:hover:bg-teal-950/40 text-slate-800 dark:text-slate-100 transition group w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center cursor-pointer touch-manipulation shrink-0"
             >
-              <ShoppingBag className="w-5 h-5 group-hover:text-teal-600 transition" />
+              <ShoppingBag className="w-4.5 h-4.5 sm:w-5 sm:h-5 group-hover:text-teal-600 transition" />
               {cartTotalCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-bold text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow-sm animate-pulse">
+                <span className="absolute -top-1 -right-1 bg-amber-500 text-slate-950 font-bold text-[10px] sm:text-[11px] w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shadow-xs animate-pulse">
                   {cartTotalCount}
                 </span>
               )}
@@ -269,15 +272,16 @@ export const Header: React.FC = () => {
             <button
               id="mobile-menu-btn"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              className="md:hidden p-1.5 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 w-9 h-9 flex items-center justify-center cursor-pointer touch-manipulation shrink-0"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Quick Search Bar (Directly accessible on mobile devices) */}
-        <div className="md:hidden pb-2.5 pt-0.5">
+        <div className="md:hidden pb-1.5 pt-0 px-0.5 w-full">
           <div className="relative w-full">
             <input
               id="mobile-global-search-input"
@@ -289,15 +293,16 @@ export const Header: React.FC = () => {
                   setActiveView('products');
                 }
               }}
-              placeholder="Search paper, pens, registers, files..."
-              className="w-full pl-9 pr-8 py-2 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-600 dark:text-white placeholder-slate-400 transition"
+              placeholder="Search paper, pens, registers..."
+              className="w-full pl-8 pr-8 py-1.5 bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 rounded-lg text-xs focus:outline-none focus:ring-0 focus:border-slate-200 dark:focus:border-slate-700 dark:text-white placeholder-slate-400 transition"
             />
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 flex items-center justify-center cursor-pointer touch-manipulation"
                 title="Clear search"
+                aria-label="Clear search"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -413,123 +418,153 @@ export const Header: React.FC = () => {
         <div
           id="mobile-menu-backdrop"
           onClick={() => setMobileMenuOpen(false)}
-          className="fixed inset-0 top-[110px] sm:top-[125px] bg-slate-950/50 backdrop-blur-xs z-30 md:hidden"
+          className="fixed inset-0 top-[112px] sm:top-[125px] bg-slate-950/60 backdrop-blur-xs z-30 md:hidden"
           aria-hidden="true"
         />
       )}
 
       {/* Mobile Dropdown Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden relative z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-3 pb-6 space-y-3 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150">
-          <div className="grid grid-cols-2 gap-2 text-xs font-semibold">
+        <div className="md:hidden relative z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 py-3 space-y-2.5 shadow-2xl animate-in fade-in slide-in-from-top-2 duration-150 max-h-[calc(100vh-115px)] overflow-y-auto">
+          {/* Quick theme & contact row in mobile menu */}
+          <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800 text-xs">
+            <button
+              onClick={toggleDarkMode}
+              className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-medium"
+            >
+              {isDarkMode ? (
+                <>
+                  <Sun className="w-4 h-4 text-amber-400" />
+                  <span>Light Mode</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-4 h-4 text-slate-600" />
+                  <span>Dark Mode</span>
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openWhatsAppSupport();
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 font-medium"
+            >
+              <MessageCircle className="w-4 h-4 text-emerald-600" />
+              <span>WhatsApp Shop</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-1.5 text-xs font-semibold">
             <button
               id="mobile-nav-home"
               onClick={() => handleNavClick('home')}
-              className={`text-left px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition ${
+              className={`text-left px-2.5 py-2.5 rounded-xl flex items-center gap-2 transition min-h-[44px] ${
                 activeView === 'home'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <Home className={`w-4 h-4 shrink-0 ${activeView === 'home' ? 'text-white' : 'text-teal-600 dark:text-teal-400'}`} />
-              <span>Home</span>
+              <span className="truncate">Home</span>
             </button>
 
             <button
               id="mobile-nav-products"
               onClick={() => handleNavClick('products')}
-              className={`text-left px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition ${
+              className={`text-left px-2.5 py-2.5 rounded-xl flex items-center gap-2 transition min-h-[44px] ${
                 activeView === 'products'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <Package className={`w-4 h-4 shrink-0 ${activeView === 'products' ? 'text-white' : 'text-teal-600 dark:text-teal-400'}`} />
-              <span>All Products</span>
+              <span className="truncate">All Products</span>
             </button>
 
             <button
               id="mobile-nav-categories"
               onClick={() => handleNavClick('categories')}
-              className={`text-left px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition ${
+              className={`text-left px-2.5 py-2.5 rounded-xl flex items-center gap-2 transition min-h-[44px] ${
                 activeView === 'categories'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <Grid className={`w-4 h-4 shrink-0 ${activeView === 'categories' ? 'text-white' : 'text-teal-600 dark:text-teal-400'}`} />
-              <span>Categories</span>
+              <span className="truncate">Categories</span>
             </button>
 
             <button
               id="mobile-nav-offers"
               onClick={() => handleNavClick('offers')}
-              className={`text-left px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition ${
+              className={`text-left px-2.5 py-2.5 rounded-xl flex items-center gap-2 transition min-h-[44px] ${
                 activeView === 'offers'
                   ? 'bg-amber-500 text-slate-950 shadow-xs'
                   : 'bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/60 dark:border-amber-900/60 hover:bg-amber-100'
               }`}
             >
               <Sparkles className={`w-4 h-4 shrink-0 ${activeView === 'offers' ? 'text-slate-950' : 'text-amber-500'}`} />
-              <span>Today's Offers</span>
+              <span className="truncate">Today's Offers</span>
             </button>
 
             <button
               id="mobile-nav-about"
               onClick={() => handleNavClick('about')}
-              className={`text-left px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition ${
+              className={`text-left px-2.5 py-2.5 rounded-xl flex items-center gap-2 transition min-h-[44px] ${
                 activeView === 'about'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <Info className={`w-4 h-4 shrink-0 ${activeView === 'about' ? 'text-white' : 'text-teal-600 dark:text-teal-400'}`} />
-              <span>About Us</span>
+              <span className="truncate">About Us</span>
             </button>
 
             <button
               id="mobile-nav-contact"
               onClick={() => handleNavClick('contact')}
-              className={`text-left px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition ${
+              className={`text-left px-2.5 py-2.5 rounded-xl flex items-center gap-2 transition min-h-[44px] ${
                 activeView === 'contact'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               <PhoneCall className={`w-4 h-4 shrink-0 ${activeView === 'contact' ? 'text-white' : 'text-teal-600 dark:text-teal-400'}`} />
-              <span>Contact</span>
+              <span className="truncate">Contact</span>
             </button>
 
             <button
               id="mobile-nav-track-order"
               onClick={() => handleNavClick('track-order')}
-              className={`text-left px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition ${
+              className={`text-left px-2.5 py-2.5 rounded-xl flex items-center gap-2 transition min-h-[44px] ${
                 activeView === 'track-order'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900/60 hover:bg-blue-100'
               }`}
             >
               <Truck className={`w-4 h-4 shrink-0 ${activeView === 'track-order' ? 'text-white' : 'text-blue-600'}`} />
-              <span>Track Order</span>
+              <span className="truncate">Track Order</span>
             </button>
 
             <button
               id="mobile-nav-customer-portal"
               onClick={() => handleNavClick('customer-portal')}
-              className={`text-left px-3 py-2.5 rounded-xl flex items-center gap-2.5 transition ${
+              className={`text-left px-2.5 py-2.5 rounded-xl flex items-center gap-2 transition min-h-[44px] ${
                 activeView === 'customer-portal'
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60 hover:bg-emerald-100'
               }`}
             >
               <User className={`w-4 h-4 shrink-0 ${activeView === 'customer-portal' ? 'text-white' : 'text-emerald-600'}`} />
-              <span>My Orders</span>
+              <span className="truncate">My Orders</span>
             </button>
 
             <button
               id="mobile-nav-cart"
               onClick={() => handleNavClick('cart')}
-              className={`text-left px-3.5 py-2.5 rounded-xl col-span-2 flex items-center justify-between transition ${
+              className={`text-left px-3 py-2.5 rounded-xl col-span-2 flex items-center justify-between transition min-h-[44px] ${
                 activeView === 'cart'
                   ? 'bg-teal-600 text-white shadow-xs'
                   : 'bg-teal-50 dark:bg-teal-950/40 text-teal-800 dark:text-teal-200 border border-teal-200 dark:border-teal-900/50'
@@ -549,25 +584,25 @@ export const Header: React.FC = () => {
             <button
               id="mobile-nav-admin-btn"
               onClick={() => handleNavClick('admin')}
-              className={`text-left px-3.5 py-2.5 rounded-xl col-span-2 flex items-center justify-between transition ${
+              className={`text-left px-3 py-2.5 rounded-xl col-span-2 flex items-center justify-between transition min-h-[44px] ${
                 activeView === 'admin'
                   ? 'bg-slate-900 text-white dark:bg-slate-800 border-2 border-teal-400 shadow-md'
                   : 'bg-slate-900 text-white dark:bg-slate-800 border border-teal-500/40 shadow-xs'
               }`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 min-w-0">
                 <ShieldCheck className="w-4 h-4 shrink-0 text-teal-400" />
-                <div>
-                  <div className="font-semibold text-xs leading-tight">
+                <div className="min-w-0">
+                  <div className="font-semibold text-xs leading-tight truncate">
                     Admin Dashboard
                   </div>
-                  <div className="text-[10px] text-slate-400 leading-tight">
+                  <div className="text-[10px] text-slate-400 leading-tight truncate">
                     Inventory, Orders, POS, GST & Reports
                   </div>
                 </div>
               </div>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 bg-teal-500/20 text-teal-300 border border-teal-400/30">
-                Direct Access
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 bg-teal-500/20 text-teal-300 border border-teal-400/30 ml-2">
+                Direct
               </span>
             </button>
           </div>
