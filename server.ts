@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import crypto from 'crypto';
 import 'dotenv/config';
 import { createServer as createViteServer } from 'vite';
@@ -8,8 +9,9 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  // Middleware for parsing JSON requests
-  app.use(express.json());
+  // Middleware for parsing JSON requests with higher limit for image uploads
+  app.use(express.json({ limit: '25mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
   // Health check endpoint
   app.get('/api/health', (req, res) => {
@@ -203,13 +205,49 @@ async function startServer() {
     res.json({ status: 'ok', received: true });
   });
 
-  // Vite middleware for development vs static build in production
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
+  // Custom Banner Upload Endpoint
+  app.post('/api/upload-banner', (req, res) => {
+    try {
+      const { imageBase64 } = req.body;
+      if (!imageBase64) {
+        return res.status(400).json({ error: 'No imageBase64 data provided' });
+      }
+
+      const cleanBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
+      const buffer = Buffer.from(cleanBase64, 'base64');
+
+      const pubDir = path.join(process.cwd(), 'public');
+      if (!fs.existsSync(pubDir)) {
+        fs.mkdirSync(pubDir, { recursive: true });
+      }
+
+      fs.writeFileSync(path.join(pubDir, 'hero-banner.jpg'), buffer);
+      fs.writeFileSync(path.join(pubDir, 'WhatsApp Image 2026-09-17 at 12.53.09 AM.jpeg'), buffer);
+
+      const distDir = path.join(process.cwd(), 'dist');
+      if (fs.existsSync(distDir)) {
+        fs.writeFileSync(path.join(distDir, 'hero-banner.jpg'), buffer);
+        fs.writeFileSync(path.join(distDir, 'WhatsApp Image 2026-09-17 at 12.53.09 AM.jpeg'), buffer);
+      }
+
+      console.log('Successfully updated banner image in public and dist directories');
+      return res.json({ success: true, url: `/hero-banner.jpg?t=${Date.now()}` });
+    } catch (err: any) {
+      console.error('Failed to upload banner image:', err);
+      return res.status(500).json({ error: err.message || 'Failed to save banner image' });
+    }
+  });
+
+    // Explicitly serve static files from public directory
+    app.use(express.static(path.join(process.cwd(), 'public')));
+
+    // Vite middleware for development vs static build in production
+    if (process.env.NODE_ENV !== 'production') {
+      const vite = await createViteServer({
+        server: { middlewareMode: true },
+        appType: 'spa',
+      });
+      app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
