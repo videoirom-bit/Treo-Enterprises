@@ -40,7 +40,16 @@ export const googleSignIn = async (): Promise<{ user: User; accessToken: string 
     }
     cachedAccessToken = credential.accessToken;
     return { user: result.user, accessToken: cachedAccessToken };
-  } catch (err) {
+  } catch (err: any) {
+    if (
+      err?.code === 'auth/popup-closed-by-user' ||
+      err?.code === 'auth/cancelled-popup-request' ||
+      err?.message?.includes('popup-closed-by-user') ||
+      err?.message?.includes('cancelled-popup-request')
+    ) {
+      console.info('Google sign-in popup closed by user.');
+      return null;
+    }
     console.error('Sign in error:', err);
     throw err;
   } finally {

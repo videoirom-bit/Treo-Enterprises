@@ -258,14 +258,14 @@ export const HomeView: React.FC = () => {
 
       {/* Today's Offers / Promotional Section */}
       {todayOffers.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-gradient-to-r from-amber-500/15 via-rose-500/10 to-orange-500/15 border border-amber-300 dark:border-amber-900/50 p-6 sm:p-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="rounded-2xl sm:rounded-3xl bg-gradient-to-r from-amber-500/15 via-rose-500/10 to-orange-500/15 border border-amber-300 dark:border-amber-900/50 p-2.5 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-6">
               <div>
                 <span className="inline-block px-3 py-1 rounded-full bg-rose-600 text-white font-bold text-xs uppercase tracking-wider mb-2">
                   Special Clearance Deals
                 </span>
-                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
                   Today's Featured Offers
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
@@ -281,7 +281,7 @@ export const HomeView: React.FC = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               {todayOffers.map((prod) => (
                 <ProductCard key={prod.id} product={prod} />
               ))}
@@ -291,8 +291,8 @@ export const HomeView: React.FC = () => {
       )}
 
       {/* Best Selling Products */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between mb-8">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-end justify-between mb-6 sm:mb-8">
           <div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Best Selling Products
@@ -313,7 +313,7 @@ export const HomeView: React.FC = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-5">
           {bestSellers.map((prod) => (
             <ProductCard key={prod.id} product={prod} />
           ))}

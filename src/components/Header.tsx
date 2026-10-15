@@ -35,6 +35,9 @@ export const Header: React.FC = () => {
     toggleDarkMode,
     isAdminLoggedIn,
     currentAdminUser,
+    isCustomerLoggedIn,
+    currentCustomer,
+    currentUserRole,
     showToast,
   } = useApp();
 
@@ -44,7 +47,15 @@ export const Header: React.FC = () => {
   const isHeaderLongPressRef = useRef(false);
 
   const handleNavClick = (view: any) => {
-    setActiveView(view);
+    if (view === 'admin') {
+      if (isAdminLoggedIn && (currentUserRole === 'admin' || currentUserRole === 'super_admin')) {
+        setActiveView('admin-dashboard');
+      } else {
+        setActiveView('admin');
+      }
+    } else {
+      setActiveView(view);
+    }
     setMobileMenuOpen(false);
   };
 
@@ -393,7 +404,7 @@ export const Header: React.FC = () => {
             }`}
           >
             <User className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>My Account & Orders</span>
+            <span>{currentCustomer ? `Account (${currentCustomer.name.split(' ')[0]})` : 'My Account & Orders'}</span>
           </button>
 
           {/* Direct link to Admin Portal */}
@@ -407,8 +418,8 @@ export const Header: React.FC = () => {
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-teal-500 dark:text-teal-300" />
-            <span>Admin Dashboard</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span>{isAdminLoggedIn ? `Admin (${currentAdminUser?.name?.split(' ')[0] || 'Console'})` : 'Admin Panel'}</span>
+            <span className={`w-1.5 h-1.5 rounded-full ${isAdminLoggedIn ? 'bg-emerald-500' : 'bg-slate-400'} animate-pulse shrink-0`} />
           </button>
         </nav>
       </div>

@@ -11,7 +11,7 @@ export const OffersView: React.FC = () => {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
       {/* Promotional Banner */}
       <div className="p-8 sm:p-12 rounded-3xl bg-gradient-to-r from-amber-500 via-rose-500 to-orange-500 text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10 max-w-2xl space-y-3">
@@ -37,7 +37,7 @@ export const OffersView: React.FC = () => {
           <span className="text-xs text-slate-500">Auto-calculated GST included</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-5">
           {discountedProducts.map((p) => (
             <ProductCard key={p.id} product={p} />
           ))}

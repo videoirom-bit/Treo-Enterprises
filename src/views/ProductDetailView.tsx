@@ -72,7 +72,7 @@ export const ProductDetailView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-8 sm:space-y-12">
       {/* Back to Products */}
       <button
         onClick={() => setActiveView('products')}
@@ -364,7 +364,7 @@ export const ProductDetailView: React.FC = () => {
           <h3 className="text-xl font-bold text-slate-900 dark:text-white">
             Related {product.category} Items
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-5">
             {relatedProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

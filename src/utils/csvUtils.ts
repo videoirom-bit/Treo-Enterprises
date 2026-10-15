@@ -1,4 +1,4 @@
-import { Product } from '../types';
+import { Product, Order } from '../types';
 
 /**
  * Escapes a single cell value for standard RFC 4180 CSV format.
@@ -12,6 +12,59 @@ export function escapeCSVField(value: unknown): string {
     return `"${str.replace(/"/g, '""')}"`;
   }
   return str;
+}
+
+/**
+ * Converts a list of Orders into a well-formatted CSV string.
+ */
+export function generateOrdersCSV(orders: Order[]): string {
+  const headers = [
+    'Order Number',
+    'Invoice Number',
+    'Order Date',
+    'Customer Name',
+    'Customer Mobile',
+    'Customer Email',
+    'Customer City',
+    'Items Count',
+    'Subtotal (INR)',
+    'Total Tax (INR)',
+    'Discount (INR)',
+    'Grand Total (INR)',
+    'Payment Method',
+    'Payment Status',
+    'Order Status',
+    'Order Type',
+  ];
+
+  const rows = orders.map((o) => {
+    const custName = o.customer?.name || o.customerName || 'Customer';
+    const custMobile = o.customer?.mobile || o.customerMobile || '';
+    const custEmail = o.customer?.email || o.customerEmail || '';
+    const custCity = o.customer?.city || o.customerCity || '';
+
+    const row = [
+      o.orderNumber,
+      o.invoiceNumber,
+      o.orderDate || '',
+      custName,
+      custMobile,
+      custEmail,
+      custCity,
+      (o.items || []).length,
+      o.subtotal || 0,
+      o.totalTax || 0,
+      o.totalDiscount || 0,
+      o.grandTotal || 0,
+      o.paymentMethod || 'Cash',
+      o.paymentStatus || 'Pending',
+      o.orderStatus || 'Pending',
+      o.orderType || 'Home Delivery',
+    ];
+    return row.map(escapeCSVField).join(',');
+  });
+
+  return [headers.join(','), ...rows].join('\r\n');
 }
 
 /**

@@ -1,4 +1,5 @@
 import { supabase } from './supabaseClient';
+export { supabase } from './supabaseClient';
 import {
   Product,
   Order,
@@ -15,6 +16,7 @@ import {
   CartItem,
   OrderItem,
   CategoryItem,
+  UserProfile,
 } from '../types';
 
 /**
@@ -852,6 +854,201 @@ export async function supabaseAuthUpdateEmail(newEmail: string) {
 }
 
 // ---------------------------------------------------------------------------
+// 9.1 USER PROFILES & ROLE-BASED ACCESS CONTROL (RBAC)
+// ---------------------------------------------------------------------------
+export async function fetchUserProfile(userId: string): Promise<UserProfile | null> {
+  try {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (error) {
+      if (!isTableMissingError(error)) {
+        console.warn('fetchUserProfile error:', error.message);
+      }
+      return null;
+    }
+
+    if (!data) return null;
+
+    return {
+      id: data.id,
+      user_id: data.user_id,
+      role: (data.role || 'user') as 'user' | 'admin' | 'super_admin',
+      email: data.email,
+      name: data.name,
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+    };
+  } catch (err: any) {
+    console.warn('fetchUserProfile exception:', err?.message);
+    return null;
+  }
+}
+
+export async function ensureUserProfile(
+  user: { id: string; email?: string; user_metadata?: Record<string, any> },
+  fallbackRole: 'user' | 'admin' | 'super_admin' = 'user'
+): Promise<UserProfile> {
+  const email = (user.email || '').toLowerCase().trim();
+  const isSuperAdminEmail =
+    email === 'videoirom@gmail.com' ||
+    email === 'superadmin@treoenterprises.com' ||
+    email === 'admin@treoenterprises.com';
+
+  const assignedRole: 'user' | 'admin' | 'super_admin' = isSuperAdminEmail
+    ? 'super_admin'
+    : user.user_metadata?.role || fallbackRole;
+
+  try {
+    const existing = await fetchUserProfile(user.id);
+    if (existing) {
+      if (isSuperAdminEmail && existing.role !== 'super_admin') {
+        await supabase
+          .from('user_profiles')
+          .update({ role: 'super_admin', updated_at: new Date().toISOString() })
+          .eq('user_id', user.id);
+        return { ...existing, role: 'super_admin' };
+      }
+      return existing;
+    }
+
+    const newProfile: UserProfile = {
+      id: 'prof-' + user.id.slice(0, 8),
+      user_id: user.id,
+      role: assignedRole,
+      email,
+      name: user.user_metadata?.name || email.split('@')[0] || 'User',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .insert({
+        user_id: user.id,
+        email,
+        name: newProfile.name,
+        role: assignedRole,
+      })
+      .select('*')
+      .maybeSingle();
+
+    if (!error && data) {
+      return {
+        id: data.id,
+        user_id: data.user_id,
+        role: data.role as 'user' | 'admin' | 'super_admin',
+        email: data.email,
+        name: data.name,
+        created_at: data.created_at,
+        updated_at: data.updated_at,
+      };
+    }
+
+    return newProfile;
+  } catch (err: any) {
+    console.warn('ensureUserProfile exception:', err?.message);
+    return {
+      id: 'prof-local',
+      user_id: user.id,
+      role: assignedRole,
+      email,
+      name: user.user_metadata?.name || email.split('@')[0] || 'User',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+  }
+}
+
+export async function fetchAllUserProfiles(): Promise<UserProfile[] | null> {
+  try {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.warn('fetchAllUserProfiles error:', error.message);
+      return null;
+    }
+
+    if (!data) return [];
+    return data as UserProfile[];
+  } catch (err: any) {
+    console.warn('fetchAllUserProfiles exception:', err?.message);
+    return null;
+  }
+}
+
+export async function updateUserProfileRole(
+  targetUserId: string,
+  newRole: 'user' | 'admin' | 'super_admin'
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('user_profiles')
+      .update({ role: newRole, updated_at: new Date().toISOString() })
+      .eq('user_id', targetUserId);
+
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err?.message || 'Failed to update role' };
+  }
+}
+
+export async function verifyUserAdminRoleInDatabase(user: {
+  id: string;
+  email?: string;
+}): Promise<{ isAuthorized: boolean; role: 'user' | 'admin' | 'super_admin'; name?: string }> {
+  const cleanEmail = (user.email || '').toLowerCase().trim();
+
+  // 1. Super Admin email bypass
+  if (
+    cleanEmail === 'videoirom@gmail.com' ||
+    cleanEmail === 'superadmin@treoenterprises.com' ||
+    cleanEmail === 'admin@treoenterprises.com'
+  ) {
+    return { isAuthorized: true, role: 'super_admin', name: 'Super Administrator' };
+  }
+
+  try {
+    // 2. Query user_profiles table directly from database
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('role, name')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (profile?.role === 'admin' || profile?.role === 'super_admin') {
+      return { isAuthorized: true, role: profile.role, name: profile.name };
+    }
+
+    // 3. Query staff_users table directly from database
+    if (cleanEmail) {
+      const { data: staff } = await supabase
+        .from('staff_users')
+        .select('role, name, active')
+        .eq('email', cleanEmail)
+        .maybeSingle();
+
+      if (staff && staff.active !== false && (staff.role === 'admin' || staff.role === 'super_admin')) {
+        return { isAuthorized: true, role: staff.role, name: staff.name };
+      }
+    }
+
+    // Regular user or profile not authorized
+    return { isAuthorized: false, role: (profile?.role as any) || 'user', name: profile?.name };
+  } catch (err: any) {
+    console.warn('verifyUserAdminRoleInDatabase error:', err?.message);
+    return { isAuthorized: false, role: 'user' };
+  }
+}
+
+// ---------------------------------------------------------------------------
 // 10. ORDER ITEMS TABLE
 // ---------------------------------------------------------------------------
 export async function saveOrderItemsToSupabase(
@@ -1289,6 +1486,54 @@ export async function seedCategoriesToSupabase(
     return { success: true, count: payloads.length };
   } catch (err: any) {
     return { success: false, error: err?.message || 'Failed to seed categories' };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 15. STORAGE BUCKET HELPER FOR PRODUCT IMAGES
+// ---------------------------------------------------------------------------
+export async function uploadProductImageToSupabase(
+  file: File
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  try {
+    const fileExt = file.name.split('.').pop() || 'jpg';
+    const cleanFileName = `prod_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
+    const filePath = `products/${cleanFileName}`;
+
+    // Try standard bucket 'product-images'
+    let { error: uploadError } = await supabase.storage
+      .from('product-images')
+      .upload(filePath, file, { upsert: true, cacheControl: '3600' });
+
+    if (!uploadError) {
+      const { data } = supabase.storage.from('product-images').getPublicUrl(filePath);
+      return { success: true, url: data.publicUrl };
+    }
+
+    // Fallback bucket 'products'
+    const fallback = await supabase.storage
+      .from('products')
+      .upload(filePath, file, { upsert: true, cacheControl: '3600' });
+
+    if (!fallback.error) {
+      const { data } = supabase.storage.from('products').getPublicUrl(filePath);
+      return { success: true, url: data.publicUrl };
+    }
+
+    // Graceful fallback to client Data URL if storage buckets are not enabled
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve({ success: true, url: reader.result as string });
+      reader.onerror = () => resolve({ success: false, error: 'Could not read image file' });
+      reader.readAsDataURL(file);
+    });
+  } catch (err: any) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve({ success: true, url: reader.result as string });
+      reader.onerror = () => resolve({ success: false, error: err?.message || 'Upload failed' });
+      reader.readAsDataURL(file);
+    });
   }
 }
 

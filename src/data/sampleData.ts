@@ -18,7 +18,7 @@ export const initialShopSettings: ShopSettings = {
   businessRegistrationNumber: 'UDYAM-CG-03-0012345',
   websiteName: 'treoenterprises.com',
   openingHours: 'Mon - Sat: 9:00 AM – 9:30 PM | Sunday: 10:00 AM – 2:00 PM',
-  upiId: 'abcpaper@okhdfcbank',
+  upiId: 'treoenterprises@okhdfcbank',
   bankName: 'HDFC Bank Ltd',
   bankAccountNumber: '50200012345678',
   bankIfsc: 'HDFC0001234',

@@ -35,7 +35,25 @@ export interface ShopSettings {
   enableRazorpay?: boolean;
 }
 
-export type UserRole = 'super_admin' | 'admin' | 'sales_staff' | 'inventory_staff' | 'accountant';
+export type UserRole =
+  | 'super_admin'
+  | 'admin'
+  | 'user'
+  | 'sales_staff'
+  | 'inventory_staff'
+  | 'accountant'
+  | 'manager'
+  | 'sales_executive';
+
+export interface UserProfile {
+  id: string;
+  user_id: string;
+  role: 'user' | 'admin' | 'super_admin';
+  email?: string;
+  name?: string;
+  created_at?: string;
+  updated_at?: string;
+}
 
 export interface StaffUser {
   id: string;
@@ -283,6 +301,14 @@ export interface Order {
     gstin?: string;
     companyName?: string;
   };
+  customerName?: string;
+  customerMobile?: string;
+  customerEmail?: string;
+  customerAddress?: string;
+  customerCity?: string;
+  customerPincode?: string;
+  customerGstin?: string;
+  customerCompany?: string;
   orderType: OrderType;
   items: OrderItem[];
   subtotal: number;
